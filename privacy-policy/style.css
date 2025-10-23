@@ -1,0 +1,404 @@
+/* Base state for all animated elements */
+:root {
+    --primary: #6366f1;
+    --secondary: #8b5cf6;
+    --accent: #06b6d4;
+    --text-dark: #0f172a;
+    --text-light: #475569;
+    --text-muted: #94a3b8;
+    --bg: #ffffff;
+    --bg-alt: #f8fafc;
+    --radius: 16px;
+    --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 20px 50px rgba(15, 23, 42, 0.12);
+    --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    margin: 0;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.7;
+    color: var(--text-dark);
+    background: var(--bg);
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Header */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.12);
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.brand-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.brand-name {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.back-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 1rem;
+    border-radius: 999px;
+    text-decoration: none;
+    color: var(--primary);
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    font-weight: 600;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.back-home:hover {
+    transform: translateY(-1px);
+    background: rgba(99, 102, 241, 0.12);
+}
+
+.back-home-icon {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    color: var(--primary);
+}
+
+.back-home-text {
+    display: inline-block;
+}
+
+/* Hero */
+.hero {
+    position: relative;
+    padding: 5rem 0 3rem;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--gradient);
+    opacity: 0.08;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.03em;
+}
+
+.meta {
+    color: var(--text-muted);
+}
+
+/* TOC + Content */
+.content-wrap {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.toc {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    position: sticky;
+    top: 96px;
+    background: var(--bg-alt);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: var(--radius);
+    padding: 1rem;
+    box-shadow: var(--shadow);
+}
+
+.toc h3 {
+    margin: 0.25rem 0 0.75rem;
+    font-size: 1rem;
+    color: var(--text-light);
+    border-radius: 30px;
+    font-weight: 700;
+}
+
+.toc-toggle {
+    display: none;
+    width: 100%;
+    margin: 0.25rem 0 0.5rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 10px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: #ffffff;
+    color: var(--text-dark);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.toc-toggle:active {
+    transform: translateY(1px);
+}
+
+.toc a {
+    display: block;
+    padding: 0.4rem 0.5rem;
+    border-radius: 8px;
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.toc a:hover {
+    background: rgba(99, 102, 241, 0.08);
+    color: var(--text-dark);
+}
+
+.toc a.active {
+    background: rgba(99, 102, 241, 0.12);
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.card {
+    background: var(--bg);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 2rem;
+}
+
+h2.section-title {
+    font-size: 1.5rem;
+    margin: 2rem 0 0.75rem;
+    letter-spacing: -0.01em;
+    word-break: break-word;
+}
+
+/* Highlight animation applied to the section title when navigated from the TOC */
+/* Use a pseudo-element for the highlight so the heading's layout doesn't change */
+@keyframes toc-highlight-fade {
+    0% {
+        opacity: 1;
+        transform: translateZ(0);
+    }
+
+    60% {
+        opacity: 0.6;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.toc-highlight {
+    /* keep element layout unchanged */
+    position: relative;
+    z-index: 1;
+    /* ensure text sits above the highlight pseudo-element */
+    border-radius: 6px;
+    /* subtle rounding so the highlight looks clean */
+}
+
+.toc-highlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    /* cover the element without affecting layout */
+    background: rgba(99, 102, 241, 0.18);
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 0;
+    /* sit behind the text but above page background */
+    animation: toc-highlight-fade 1500ms ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .toc-highlight::before {
+        animation: none !important;
+        opacity: 1 !important;
+    }
+}
+
+h3 {
+    font-size: 1.125rem;
+    margin: 1.25rem 0 0.5rem;
+}
+
+p {
+    margin: 0 0 1rem;
+    color: var(--text-light);
+}
+
+ul {
+    margin: 0 0 1rem 1.25rem;
+    color: var(--text-light);
+}
+
+li {
+    margin: 0.35rem 0;
+}
+
+.note {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+.divider {
+    height: 1px;
+    background: rgba(15, 23, 42, 0.08);
+    margin: 2rem 0;
+}
+
+/* Footer */
+.site-footer {
+    padding-top: 4rem;
+    color: var(--text-muted);
+}
+
+.site-footer .footer-blurb {
+    background: var(--bg-alt);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    box-shadow: var(--shadow);
+}
+
+/* Mobile-first adjustments */
+@media (max-width: 1024px) {
+    .hero {
+        padding: 10vw 0 6vw;
+    }
+
+    .page-title {
+        font-size: 6.8vw;
+    }
+
+    .content-wrap {
+        grid-template-columns: 1fr;
+    }
+
+    .toc {
+        position: static;
+        top: auto;
+        margin-bottom: 4vw;
+    }
+
+    h2.section-title {
+        font-size: 4.6vw;
+    }
+
+    h3 {
+        font-size: 3.9vw;
+    }
+
+    p,
+    li,
+    .meta,
+    .note {
+        font-size: 3.2vw;
+        line-height: 1.8;
+    }
+
+    ul {
+        margin-left: 5vw;
+    }
+
+    .back-home {
+        padding: 2vw 3.4vw;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 1rem;
+    }
+
+    .hero {
+        padding: 12vw 0 8vw;
+    }
+
+    .page-title {
+        font-size: 8.5vw;
+    }
+
+    .card {
+        padding: 6vw;
+    }
+
+    .toc h3 {
+        font-size: 3.8vw;
+    }
+
+    .toc a {
+        font-size: 3.6vw;
+    }
+
+    /* Ensure comfortable reading size on very small screens */
+    p,
+    li,
+    .meta,
+    .note {
+        font-size: 3.8vw;
+        line-height: 1.85;
+    }
+
+    .toc-toggle {
+        display: block;
+        font-size: 3.6vw;
+    }
+
+    /* Use max-height + opacity for smooth open/close on mobile */
+    .toc .toc-links {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 320ms cubic-bezier(.2, .8, .2, 1), opacity 220ms ease;
+    }
+
+    .toc.open .toc-links {
+        max-height: 1000px;
+        opacity: 1;
+    }
+
+    .back-home {
+        padding: 1vw;
+    }
+}
