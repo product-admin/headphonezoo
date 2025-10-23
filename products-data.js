@@ -8,7 +8,7 @@ const productsData = {
             alt: "Wireless Headphones",
             rating: 4.5,
             comingSoon: false,
-            url: "https://headphonezoo-au.com/p47-wireless-bluetooth-headphones"
+            url: "https://headphonezoo.com/headphone-page/p47-wireless-bluetooth-headphones"
         },
         {
             id: 2,
