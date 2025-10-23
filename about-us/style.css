@@ -1,0 +1,1556 @@
+/* Base state for all animated elements */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Brand palette */
+    --brand-primary: #ffffff;
+    /* White */
+    --brand-accent-1: rgb(48, 160, 183);
+    /* Teal */
+    --brand-accent-2: rgb(70, 45, 107);
+    /* Deep purple */
+
+    /* Semantic tokens mapped to brand */
+    --primary-color: var(--brand-accent-1);
+    --secondary-color: var(--brand-accent-2);
+    --accent-color: var(--brand-accent-1);
+
+    --text-dark: #0f172a;
+    --text-light: #64748b;
+    --text-muted: #94a3b8;
+    --background-light: #f8fafc;
+    --background-dark: var(--brand-accent-2);
+    --white: #ffffff;
+    --border-radius: 1rem;
+    --border-radius-lg: 1.5rem;
+    --box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --box-shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+    /* Brand-driven gradients */
+    --gradient-primary: linear-gradient(135deg, var(--brand-accent-2) 0%, var(--brand-accent-1) 100%);
+    --gradient-secondary: linear-gradient(135deg, rgba(70, 45, 107, 0.9) 0%, rgba(48, 160, 183, 0.9) 100%);
+    --gradient-text: linear-gradient(135deg, var(--brand-accent-2) 0%, var(--brand-accent-1) 100%);
+
+    /* Default navbar height, updated dynamically via JS */
+    --navbar-height: 64px;
+    /* Extra breathing room below navbar so hero-badge isn't too tight */
+    --navbar-clearance: 8px;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    /* Ensure in-page anchors and programmatic scrolls account for fixed navbar */
+    scroll-padding-top: calc(var(--navbar-height) + var(--navbar-clearance));
+}
+
+/* Enhanced smooth scrolling */
+* {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+    color: var(--text-dark);
+    background-color: var(--white);
+    overflow-x: hidden;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+/* Prevent horizontal overflow from off-screen animations or wide elements */
+html,
+body {
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4 {
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    letter-spacing: -0.025em;
+}
+
+h1 {
+    font-size: 3.5rem;
+}
+
+h2 {
+    font-size: 2.5rem;
+}
+
+h3 {
+    font-size: 1.875rem;
+}
+
+h4 {
+    font-size: 1.25rem;
+}
+
+p {
+    margin-bottom: 1rem;
+    color: var(--text-light);
+    font-size: 1.125rem;
+    line-height: 1.7;
+}
+
+.lead-text {
+    font-size: 1.25rem;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+}
+
+.gradient-text {
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Navigation */
+.navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 2px solid rgba(48, 160, 183, 0.15);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-img {
+    width: 4rem;
+    border-radius: 50%;
+    transition: transform 1s ease;
+}
+
+.brand-name {
+    font-weight: 800;
+    font-size: 1.2rem;
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    /* Keep content clear of the fixed navbar across devices */
+    padding-top: calc(var(--navbar-height) + var(--navbar-clearance));
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+.hero-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient-primary);
+    opacity: 0.9;
+}
+
+.hero-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+    }
+}
+
+.hero-content {
+    text-align: center;
+    color: var(--white);
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.hero-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    line-height: 1.1;
+}
+
+.title-line {
+    display: block;
+}
+
+
+.hero-description {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 3rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta-primary,
+.cta-secondary {
+    padding: 1rem 2rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-primary {
+    background: var(--white);
+    color: var(--primary-color);
+    box-shadow: var(--box-shadow);
+}
+
+.cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow-lg);
+}
+
+.cta-secondary {
+    background: transparent;
+    color: var(--white);
+    border: 2px solid rgba(255, 255, 255, 0.35);
+}
+
+.cta-secondary:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+.cta-primary.large,
+.cta-secondary.large {
+    padding: 1.25rem 2.5rem;
+    font-size: 1.125rem;
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.scroll-indicator:hover {
+    color: rgba(255, 255, 255, 1);
+    transform: translateX(-50%) translateY(-5px);
+}
+
+.scroll-line {
+    width: 2px;
+    height: 2rem;
+    background: rgba(255, 255, 255, 0.5);
+    position: relative;
+    overflow: hidden;
+    margin-top: 2rem;
+}
+
+.scroll-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: var(--white);
+    animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+
+    0%,
+    100% {
+        transform: translateY(-100%);
+    }
+
+    50% {
+        transform: translateY(100%);
+    }
+}
+
+/* Section Badges */
+.section-badge {
+    display: inline-block;
+    background: var(--gradient-text);
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+}
+
+/* Sections */
+.description-section,
+.features-section,
+.social-section,
+.cta-section,
+.products-section {
+    padding: 8rem 0;
+}
+
+.description-section {
+    background: var(--white);
+}
+
+.features-section {
+    background: var(--background-light);
+}
+
+.social-section {
+    background: var(--white);
+}
+
+.cta-section {
+    background: var(--background-dark);
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Products Section */
+.products-section {
+    background: var(--white);
+}
+
+.products-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+}
+
+.product-card {
+    display: block;
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+    border: 1px solid rgba(48, 160, 183, 0.15);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--box-shadow-lg);
+    border-color: rgba(48, 160, 183, 0.35);
+}
+
+/* Coming Soon teaser styling */
+.product-card.coming-soon {
+    position: relative;
+    cursor: default;
+}
+
+.product-card.coming-soon .product-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(2, 6, 23, 0.0) 30%, rgba(2, 6, 23, 0.55) 100%);
+}
+
+.product-card.coming-soon .product-info {
+    position: relative;
+}
+
+.product-card.coming-soon:hover {
+    transform: none;
+    box-shadow: var(--box-shadow);
+    border-color: rgba(99, 102, 241, 0.15);
+}
+
+.product-image {
+    position: relative;
+    height: 14rem;
+    display: grid;
+    place-items: center;
+    color: var(--white);
+    background: linear-gradient(135deg, var(--brand-accent-2) 0%, var(--brand-accent-1) 100%);
+}
+
+.product-image.alt {
+    background: linear-gradient(135deg, var(--brand-accent-1) 0%, var(--brand-accent-2) 100%);
+}
+
+.product-image.warm {
+    background: linear-gradient(135deg, var(--brand-accent-1) 0%, var(--brand-accent-2) 100%);
+}
+
+.product-image.cool {
+    background: linear-gradient(135deg, var(--brand-accent-1) 0%, var(--brand-accent-2) 100%);
+}
+
+.product-image.dusk {
+    background: linear-gradient(135deg, var(--brand-accent-2) 0%, #334155 100%);
+}
+
+.product-image.lava {
+    background: linear-gradient(135deg, #ef4444 0%, #8b5cf6 100%);
+}
+
+.product-image svg {
+    width: 5rem;
+    height: 5rem;
+    stroke: rgba(255, 255, 255, 0.95);
+}
+
+.product-image img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    mix-blend-mode: normal;
+    filter: none;
+}
+
+.product-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(0, 39, 47, 0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    mix-blend-mode: normal;
+}
+
+.product-info {
+    padding: 1.25rem 1.25rem 1.5rem;
+}
+
+.product-title {
+    color: var(--text-dark);
+    font-size: 1.125rem;
+    margin-bottom: 0.35rem;
+}
+
+.product-meta {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+/* Mobile horizontal scroller */
+.products-scroller {
+    display: none;
+}
+
+/* Description Section */
+.description-content {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.section-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-light);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    padding: 1rem 0;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.mission-content {
+    margin-top: 1rem;
+    text-align: left;
+}
+
+.mission-content p {
+    margin-bottom: 1.5rem;
+}
+
+/* Features Grid */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 3rem;
+    margin-top: 4rem;
+}
+
+.feature-card {
+    background: var(--white);
+    padding: 3rem 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+    text-align: center;
+    transition: all 0.4s ease;
+    border: 1px solid rgba(48, 160, 183, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover::before {
+    transform: scaleX(1);
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--box-shadow-lg);
+    border-color: rgba(48, 160, 183, 0.3);
+}
+
+.feature-icon {
+    width: 4rem;
+    height: 4rem;
+    background: linear-gradient(135deg, var(--brand-accent-1) 0%, var(--brand-accent-2) 100%);
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    color: var(--white);
+}
+
+.feature-icon svg {
+    width: 2rem;
+    height: 2rem;
+}
+
+.feature-card h3 {
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.feature-card p {
+    color: var(--text-light);
+    line-height: 1.7;
+}
+
+/* CTA Section */
+.cta-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+.cta-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 25% 25%, rgba(48, 160, 183, 0.18) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(70, 45, 107, 0.18) 0%, transparent 50%);
+    animation: float 15s ease-in-out infinite reverse;
+}
+
+.cta-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cta-content h2 {
+    color: var(--white);
+    margin-bottom: 1.5rem;
+}
+
+.cta-content p {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.25rem;
+    margin-bottom: 3rem;
+}
+
+.cta-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Social Grid */
+.social-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.social-card {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.social-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--box-shadow-lg);
+}
+
+.social-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.social-icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.social-icon.instagram {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: var(--white);
+}
+
+.social-icon.youtube {
+    background: #ff0000;
+    color: var(--white);
+}
+
+.social-icon.twitter {
+    background: #1da1f2;
+    color: var(--white);
+}
+
+.social-icon.facebook {
+    background: #1877f2;
+    color: var(--white);
+}
+
+.social-icon.tiktok {
+    background: linear-gradient(135deg, #000000 0%, #25F4EE 50%, #FE2C55 100%);
+    color: var(--white);
+}
+
+.social-info h3 {
+    margin-bottom: 0.25rem;
+    color: var(--text-dark);
+}
+
+.social-info p {
+    color: var(--text-light);
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+/* Footer */
+.footer {
+    background: var(--background-dark);
+    color: var(--text-light);
+    padding: 4rem 0 2rem;
+}
+
+.footer-content {
+    display: grid;
+    margin-bottom: 3rem;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+}
+
+.footer-brand {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.footer-logo .brand-name {
+    color: var(--white);
+}
+
+.footer-brand p {
+    color: var(--text-muted);
+    margin: 0;
+    text-align: center;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.footer-bottom p {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+.footer-legal {
+    display: flex;
+    gap: 2rem;
+}
+
+.footer-legal a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 0.3s ease;
+}
+
+.footer-legal a:hover {
+    color: var(--white);
+}
+
+/* Trust Signals */
+.trust-signals {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.trust-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--white);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.trust-icon {
+    font-size: 1.25rem;
+    opacity: 0.9;
+}
+
+/* Animations */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .logo-img {
+        width: 7.5vw;
+    }
+
+    .brand-name {
+        font-size: 2vw;
+    }
+
+
+
+    /* Sections */
+    .description-section,
+    .features-section,
+    .social-section,
+    .cta-section,
+    .products-section {
+        padding: 12vw 0;
+    }
+
+
+
+    .container {
+        padding: 0 1.5rem;
+    }
+
+    /* Typography responsive sizing */
+    h1 {
+        font-size: 8vw;
+    }
+
+    h2 {
+        font-size: 6vw;
+    }
+
+    h3 {
+        font-size: 4.5vw;
+    }
+
+    .hero-title {
+        font-size: 7.5vw;
+    }
+
+    .hero-description {
+        font-size: 3vw;
+    }
+
+    .lead-text {
+        font-size: 3.5vw;
+    }
+
+    p {
+        font-size: 2.8vw;
+    }
+
+    .hero-badge {
+        font-size: 2.2vw;
+        padding: 1.2vw 3vw;
+    }
+
+    .stat-number {
+        font-size: 7vw;
+    }
+
+    .stat-label {
+        font-size: 2.5vw;
+    }
+
+    /* Button sizing */
+    .cta-primary,
+    .cta-secondary {
+        padding: 2.5vw 5vw;
+        font-size: 2.8vw;
+    }
+
+    .cta-primary.large,
+    .cta-secondary.large {
+        padding: 3vw 6vw;
+        font-size: 3.2vw;
+    }
+
+    /* Icon sizing */
+    .feature-icon {
+        width: 9vw;
+        height: 9vw;
+        border-radius: 2.5vw;
+    }
+
+    .feature-icon svg {
+        width: 4.5vw;
+        height: 4.5vw;
+    }
+
+    .social-icon {
+        width: 7vw;
+        height: 7vw;
+        border-radius: 1.8vw;
+    }
+
+    .social-icon svg {
+        width: 3.5vw;
+        height: 3.5vw;
+    }
+
+    /* Card padding */
+    .feature-card {
+        padding: 7vw 5vw;
+    }
+
+    .social-card {
+        padding: 4vw;
+    }
+
+    /* Scroll indicator spacing */
+    .scroll-line {
+        margin-top: 4vw;
+    }
+
+    /* Section badges */
+    .section-badge {
+        font-size: 2.5vw;
+        padding: 1vw 2.5vw;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5vw;
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 5vw;
+    }
+
+    /* Footer text sizing */
+    .footer-legal a {
+        font-size: 2.2vw;
+    }
+
+    .footer-brand p {
+        font-size: 2.5vw;
+    }
+
+    /* Products: responsive sizing using vw */
+    .products-grid {
+        gap: 5vw;
+    }
+
+    .product-image {
+        height: 35vw;
+    }
+
+    .product-badge {
+        top: 2.5vw;
+        left: 2.5vw;
+        font-size: 2.4vw;
+        padding: 1vw 2vw;
+    }
+
+    .product-title {
+        font-size: 3.2vw;
+    }
+
+    .product-meta {
+        font-size: 2.6vw;
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* Sections: increase spacing a bit more for clarity */
+    :root {
+        /* Slightly larger clearance on mobile to separate hero-badge from navbar */
+        --navbar-clearance: 12px;
+    }
+
+    .description-section,
+    .features-section,
+    .social-section,
+    .cta-section,
+    .products-section {
+        padding: 14vw 0;
+    }
+
+    /* Headers: give a bit more breathing room */
+    .section-header {
+        margin-bottom: 6vw;
+    }
+
+    .products-header {
+        margin-bottom: 6vw;
+    }
+
+    .nav-container {
+        padding: 0 2vw;
+    }
+
+    .brand-name {
+        font-size: 3vw;
+    }
+
+    /* Typography responsive sizing */
+    h1 {
+        font-size: 10vw;
+    }
+
+    h2 {
+        font-size: 8vw;
+    }
+
+    h3 {
+        font-size: 6vw;
+    }
+
+    .hero-title {
+        font-size: 8.5vw;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+    }
+
+    .hero-description {
+        font-size: 3.6vw;
+        margin-bottom: 5vw;
+    }
+
+    .lead-text {
+        font-size: 4.5vw;
+    }
+
+    p {
+        font-size: 3.5vw;
+    }
+
+    .hero-badge {
+        font-size: 2.8vw;
+        padding: 1.2vw 3.6vw;
+    }
+
+    .stat-number {
+        font-size: 9vw;
+    }
+
+    .stat-label {
+        font-size: 3.5vw;
+    }
+
+    /* Button sizing */
+    .cta-primary,
+    .cta-secondary {
+        padding: 3.5vw 7vw;
+        font-size: 3.5vw;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .cta-primary.large,
+    .cta-secondary.large {
+        padding: 4vw 8vw;
+        font-size: 4vw;
+    }
+
+    /* Icon sizing */
+    .feature-icon {
+        width: 12vw;
+        height: 12vw;
+        border-radius: 3vw;
+    }
+
+    .feature-icon svg {
+        width: 6vw;
+        height: 6vw;
+    }
+
+    .social-icon {
+        width: 10vw;
+        height: 10vw;
+        border-radius: 2.5vw;
+    }
+
+    .social-icon svg {
+        width: 5vw;
+        height: 5vw;
+    }
+
+    /* Card padding */
+    .feature-card {
+        padding: 8vw 6vw;
+    }
+
+    .social-card {
+        padding: 5vw;
+    }
+
+    /* Section badges */
+    .section-badge {
+        font-size: 3.5vw;
+        padding: 1.5vw 3.5vw;
+    }
+
+    /* Scroll indicator spacing */
+    .scroll-line {
+        margin-top: 5vw;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 6vw;
+        text-align: center;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 6vw;
+    }
+
+    .social-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-links {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-legal {
+        justify-content: center;
+    }
+
+    /* Trust signals responsive */
+    .trust-signals {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3vw;
+        padding: 4vw 0;
+    }
+
+    .trust-item {
+        font-size: 2.8vw;
+        gap: 2vw;
+    }
+
+    .trust-icon {
+        font-size: 4vw;
+    }
+
+    /* Footer text sizing */
+    .footer-legal a {
+        font-size: 2.8vw;
+    }
+
+    .footer-brand p {
+        font-size: 3vw;
+    }
+
+    /* Products: switch to horizontal scroller */
+    .products-grid {
+        display: none;
+    }
+
+    .products-scroller {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 75vw;
+        overflow-x: auto;
+        gap: 4vw;
+        padding: 2vw 2vw 2vw 2vw;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .products-scroller .product-card {
+        scroll-snap-align: start;
+        border-radius: 4vw;
+    }
+
+    .products-header {
+        margin-bottom: 5vw;
+    }
+
+    .product-image svg {
+        width: 12vw;
+        height: 12vw;
+    }
+
+    /* Slightly smaller cards on small screens */
+    .products-scroller {
+        grid-auto-columns: 70vw;
+    }
+
+    .product-image {
+        height: 38vw;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Sections: generous spacing on very small screens */
+    :root {
+        /* A touch more on very small devices */
+        --navbar-clearance: 14px;
+    }
+
+    .description-section,
+    .features-section,
+    .social-section,
+    .cta-section,
+    .products-section {
+        padding: 16vw 0;
+    }
+
+    .section-header {
+        margin-bottom: 8vw;
+    }
+
+    .products-header {
+        margin-bottom: 8vw;
+    }
+
+    .nav-container {
+        padding: 0 1vw;
+    }
+
+    .logo-img {
+        width: 13vw;
+    }
+
+    .brand-name {
+        font-size: 4vw;
+    }
+
+    .container {
+        padding: 0 1rem;
+    }
+
+    /* Typography responsive sizing */
+    h1 {
+        font-size: 12vw;
+    }
+
+    h2 {
+        font-size: 10vw;
+    }
+
+    h3 {
+        font-size: 7.5vw;
+    }
+
+    .hero-title {
+        font-size: 7vw;
+        line-height: 1.12;
+        letter-spacing: -0.015em;
+    }
+
+    .hero-description {
+        font-size: 3.9vw;
+        margin-bottom: 6vw;
+    }
+
+    .lead-text {
+        font-size: 5vw;
+    }
+
+    p {
+        font-size: 4vw;
+    }
+
+    .hero-badge {
+        font-size: 3.2vw;
+        padding: 1.6vw 4.2vw;
+    }
+
+    .stat-number {
+        font-size: 11vw;
+    }
+
+    .stat-label {
+        font-size: 4vw;
+    }
+
+    /* Button sizing */
+    .cta-primary,
+    .cta-secondary {
+        padding: 4vw 8vw;
+        font-size: 4vw;
+    }
+
+    .cta-primary.large,
+    .cta-secondary.large {
+        padding: 4.5vw 9vw;
+        font-size: 4.5vw;
+    }
+
+    /* Icon sizing */
+    .feature-icon {
+        width: 15vw;
+        height: 15vw;
+        border-radius: 4vw;
+    }
+
+    .feature-icon svg {
+        width: 7.5vw;
+        height: 7.5vw;
+    }
+
+    .social-icon {
+        width: 12vw;
+        height: 12vw;
+        border-radius: 3vw;
+    }
+
+    .social-icon svg {
+        width: 6vw;
+        height: 6vw;
+    }
+
+    /* Card padding */
+    .feature-card {
+        padding: 10vw 7vw;
+    }
+
+    .social-card {
+        padding: 6vw;
+    }
+
+    /* Section badges */
+    .section-badge {
+        font-size: 4vw;
+        padding: 2vw 4vw;
+    }
+
+    .hero-content {
+        padding: 0 1rem;
+    }
+
+    .section-header {
+        margin-bottom: 2rem;
+    }
+
+    /* Scroll indicator spacing */
+    .scroll-line {
+        margin-top: 6vw;
+    }
+
+    /* Footer text sizing */
+    .footer-legal a {
+        font-size: 3.2vw;
+    }
+
+    .footer-brand p {
+        font-size: 3.5vw;
+    }
+
+    /* Trust signals for very small screens */
+    .trust-signals {
+        grid-template-columns: 1fr;
+        gap: 4vw;
+        padding: 5vw 0;
+    }
+
+    .trust-item {
+        font-size: 3.2vw;
+        justify-content: center;
+    }
+
+    /* Products: tighter scroller on very small screens */
+    .products-scroller {
+        grid-auto-columns: 78vw;
+        gap: 4.5vw;
+        padding-left: 4vw;
+    }
+
+    .product-image {
+        height: 40vw;
+    }
+
+    .product-badge {
+        font-size: 3.2vw;
+        padding: 1.2vw 2.8vw;
+    }
+
+    .product-title {
+        font-size: 4.5vw;
+    }
+
+    .product-meta {
+        font-size: 3.6vw;
+    }
+}
+
+/* Prevent scroll-indicator overlapping on short screens */
+@media (max-height: 700px) {
+    .hero-content {
+        padding-bottom: 4rem;
+    }
+
+    .scroll-indicator {
+        bottom: 0.5rem;
+    }
+
+    .scroll-line {
+        height: 1.25rem;
+        margin-top: 3vw;
+    }
+}
+
+@media (max-height: 550px) {
+    .scroll-indicator {
+        display: none;
+    }
+}
+
+/* Performance optimizations */
+.feature-card,
+.social-card,
+.cta-primary,
+.cta-secondary {
+    will-change: transform;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .scroll-line::after {
+        animation: none;
+    }
+}
