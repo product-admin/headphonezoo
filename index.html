@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadphoneZoo Store</title>
+
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+
+
+</head>
+
+
+
+
+<body>
+    <div class="container">
+
+
+
+
+        <header>
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo">
+                        <img src="headphonezoo.webp" alt="HeadphoneZoo Logo">
+                    </div>
+                    <h1 class="store-title">HeadphoneZoo Store</h1>
+                </div>
+                <nav class="header-nav">
+                    <button class="about-btn" onclick="window.open('https://headphonezoo-au.com/about-us', '_blank')">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About Us</span>
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+
+
+
+
+
+
+        <section class="most-sold">
+            <h2 class="section-title">Most Sold <i class="fas fa-fire"></i></h2>
+            <div class="products-grid">
+                <!-- Products will be dynamically generated here -->
+            </div>
+        </section>
+
+
+
+
+
+
+
+
+
+
+
+
+        <section class="newest">
+            <h2 class="section-title">Newest <i class="fas fa-snowflake"></i></h2>
+            <div class="products-grid">
+                <!-- Products will be dynamically generated here -->
+            </div>
+        </section>
+
+
+
+
+
+
+
+
+
+        <section class="others">
+            <h2 class="section-title">Other Products</h2>
+            <div class="products-grid">
+                <!-- Products will be dynamically generated here -->
+            </div>
+        </section>
+
+
+
+
+
+        <footer>
+            <div class="footer-content">
+                <button class="about-btn footer-about-btn" onclick="window.open('https://headphonezoo.com/about', '_blank')">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About Us</span>
+                </button>
+                <p class="copyright">© 2025 HeadphoneZoo Store. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+
+
+
+    <script src="products-data.js"></script>
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>
