@@ -4,7 +4,7 @@ const productsData = {
         {
             id: 1,
             name: "P47 Wireless Headphones",
-            image: "products/p47-wireless-bluetooth-headphones.webp",
+            image: "product-image/p47-wireless-bluetooth-headphones.webp",
             alt: "Wireless Headphones",
             rating: 4.5,
             comingSoon: false,
@@ -17,7 +17,7 @@ const productsData = {
             alt: "Smart Watch",
             rating: 0,
             comingSoon: true,
-            url: "https://headphonezoo.com/products/smart-watch-pro"
+            url: ""
         },
     ],
     "newest": [
@@ -28,7 +28,7 @@ const productsData = {
             alt: "Running Shoes",
             rating: 0,
             comingSoon: true,
-            url: "https://headphonezoo.com/products/ultra-running-shoes"
+            url: ""
         },
     ],
     "others": [
@@ -39,7 +39,7 @@ const productsData = {
             alt: "Water Bottle",
             rating: 0,
             comingSoon: true,
-            url: "https://headphonezoo.com/products/insulated-water-bottle"
+            url: ""
         },
     ]
 };
