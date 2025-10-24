@@ -72,11 +72,13 @@
 
         .header-content {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
             position: relative;
             z-index: 1;
-            min-width: 0; /* Prevents flex items from overflowing */
+            min-width: 0;
+            /* Prevents flex items from overflowing */
         }
 
         @media (min-width: 760px) {
@@ -87,7 +89,11 @@
 
         .header-nav {
             display: flex;
-            align-items: center;
+            align-items: start;
+            text-align: start;
+            gap: 5px;
+            width: 100%;
+            justify-content: flex-end;
         }
 
         header::before {
@@ -396,10 +402,13 @@
         }
 
         @keyframes pulse {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: scale(1);
                 box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
             }
+
             50% {
                 transform: scale(1.05);
                 box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
@@ -433,7 +442,7 @@
             transform: none;
         }
 
-        .product-info{
+        .product-info {
             padding: 5px 5px 0 5px;
         }
 
@@ -564,7 +573,7 @@
 
         @media (max-width: 480px) {
             .about-btn {
-                font-size: 3.5vw;
+                font-size: 3vw;
                 padding: 4px 8px;
                 gap: 6px;
             }
