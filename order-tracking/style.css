@@ -78,6 +78,7 @@ header {
   transition: var(--transition);
   position: relative;
   margin-right: 20px;
+  padding: 0.5rem 0;
 }
 
 .nav-links a:hover {
@@ -216,7 +217,7 @@ button[type="submit"]:hover {
   margin-bottom: 1rem;
 }
 
-.items {
+.order-items {
   margin: 1.5rem 0;
 }
 
@@ -260,6 +261,94 @@ button[type="submit"]:hover {
 .hz-item-meta {
   color: #666;
   font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.hz-item-meta-small {
+  color: #888;
+  font-size: 0.8rem;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+/* Order Totals Table */
+.order-totals {
+  background: white;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.totals-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.totals-table tr {
+  border-bottom: 1px solid #eee;
+}
+
+.totals-table tr:last-child {
+  border-bottom: none;
+}
+
+.totals-table td {
+  padding: 0.5rem 0;
+}
+
+.totals-table td:first-child {
+  text-align: left;
+  font-weight: 500;
+}
+
+.totals-table td:last-child {
+  text-align: right;
+  font-weight: 600;
+}
+
+.totals-table tr:last-child td {
+  font-size: 1.1rem;
+  color: var(--secondary-color);
+}
+
+/* Address Section */
+.addr-section {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.address-box {
+  flex: 1;
+  min-width: 250px;
+  background: white;
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.address-box h4 {
+  color: var(--secondary-color);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 0.5rem;
+}
+
+.addr {
+  line-height: 1.6;
+  color: #555;
+}
+
+.addr a {
+  color: var(--primary-color);
+  transition: var(--transition);
+}
+
+.addr a:hover {
+  color: #2980b9;
+  text-decoration: underline;
 }
 
 /* Footer Styles */
@@ -276,75 +365,6 @@ footer {
   padding: 0 1.5rem;
 }
 
-.footer-column {
-  flex: 1;
-  min-width: 200px;
-}
-
-.footer-column h3 {
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
-  position: relative;
-  padding-bottom: 0.5rem;
-}
-
-.footer-column h3::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 40px;
-  height: 2px;
-  background-color: var(--primary-color);
-}
-
-.footer-links li {
-  margin-bottom: 0.8rem;
-}
-
-.footer-links a {
-  transition: var(--transition);
-}
-
-.footer-links a:hover {
-  color: var(--primary-color);
-  padding-left: 5px;
-}
-
-.contact-info li {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-}
-
-.contact-info i {
-  margin-right: 0.8rem;
-  color: var(--primary-color);
-  margin-top: 0.2rem;
-}
-
-.social-links {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.social-links a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  transition: var(--transition);
-}
-
-.social-links a:hover {
-  background-color: var(--primary-color);
-  transform: translateY(-3px);
-}
-
 .footer-bottom {
   text-align: center;
   padding-top: 0.1rem;
@@ -354,118 +374,194 @@ footer {
 
 /* Responsive Styles */
 @media (max-width: 760px) {
-
   /* Using vw for smaller screens */
   body {
-      font-size: 3.5vw;
+    font-size: 3.5vw;
   }
 
   .header-container {
-      padding: 0 4vw;
+    padding: 0 4vw;
   }
 
   .logo {
-      font-size: 5vw;
+    font-size: 5vw;
   }
 
   .nav-links a {
-      font-size: 0.8rem;
+    font-size: 3.5vw;
+    margin-right: 4vw;
   }
 
   .order-tracking-wrapper {
-      padding: 0 4vw;
+    padding: 0 4vw;
   }
 
   .tracking-container {
-      padding: 5vw;
+    padding: 5vw;
   }
 
   .tracking-title {
-      font-size: 6vw;
+    font-size: 6vw;
   }
 
   .tracking-desc {
-      font-size: 3.5vw;
+    font-size: 3.5vw;
   }
 
   input[type="text"],
   input[type="email"] {
-      padding: 2.5vw 3vw;
-      font-size: 3.5vw;
+    padding: 2.5vw 3vw;
+    font-size: 3.5vw;
   }
 
   button[type="submit"] {
-      padding: 2.5vw 3vw;
-      font-size: 3.5vw;
+    padding: 2.5vw 3vw;
+    font-size: 3.5vw;
   }
 
   .footer-container {
-      padding: 0 4vw;
-  }
-
-  .footer-column h3 {
-      font-size: 4vw;
+    padding: 0 4vw;
   }
 
   .hz-order-item {
-      flex-direction: column;
-      text-align: center;
+    flex-direction: column;
+    text-align: center;
+    gap: 2vw;
   }
 
   .hz-item-thumb {
-      width: 100%;
-      max-width: 150px;
-      margin: 0 auto;
+    width: 100%;
+    max-width: 150px;
+    height: 150px;
+    margin: 0 auto;
+  }
+
+  .order-result {
+    padding: 4vw;
+  }
+
+  .order-result h3 {
+    font-size: 4.5vw;
+  }
+
+  .order-result p {
+    font-size: 3.5vw;
+  }
+
+  .hz-item-name {
+    font-size: 4vw;
+  }
+
+  .hz-item-meta {
+    font-size: 3.2vw;
+  }
+
+  .hz-item-meta-small {
+    font-size: 3vw;
+  }
+
+  .addr-section {
+    flex-direction: column;
+    gap: 4vw;
+  }
+
+  .address-box {
+    min-width: auto;
+    padding: 4vw;
+  }
+
+  .address-box h4 {
+    font-size: 4vw;
+  }
+
+  .addr {
+    font-size: 3.5vw;
+  }
+
+  .totals-table td {
+    font-size: 3.5vw;
+    padding: 1vw 0;
+  }
+
+  .totals-table tr:last-child td {
+    font-size: 4vw;
   }
 }
 
 @media (min-width: 761px) {
-
   /* Using rem for larger screens */
   body {
-      font-size: 1rem;
+    font-size: 1rem;
   }
 
   .header-container {
-      padding: 0 1.5rem;
+    padding: 0 1.5rem;
   }
 
   .logo {
-      font-size: 1.8rem;
+    font-size: 1.8rem;
+  }
+
+  .nav-links a {
+    font-size: 1rem;
   }
 
   .order-tracking-wrapper {
-      padding: 0 1.5rem;
+    padding: 0 1.5rem;
   }
 
   .tracking-container {
-      padding: 2.5rem;
+    padding: 2.5rem;
   }
 
   .tracking-title {
-      font-size: 2rem;
+    font-size: 2rem;
   }
 
   .tracking-desc {
-      font-size: 1.1rem;
+    font-size: 1.1rem;
   }
 
   input[type="text"],
   input[type="email"] {
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
   }
 
   button[type="submit"] {
-      padding: 0.75rem 2rem;
-      font-size: 1rem;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
   }
 
   .footer-container {
-      padding: 0 1.5rem;
+    padding: 0 1.5rem;
   }
 
-  .footer-column h3 {
-      font-size: 1.2rem;
+  .hz-item-name {
+    font-size: 1rem;
+  }
+
+  .hz-item-meta {
+    font-size: 0.9rem;
+  }
+
+  .hz-item-meta-small {
+    font-size: 0.8rem;
+  }
+
+  .address-box h4 {
+    font-size: 1.1rem;
+  }
+
+  .addr {
+    font-size: 0.95rem;
+  }
+
+  .totals-table td {
+    font-size: 1rem;
+  }
+
+  .totals-table tr:last-child td {
+    font-size: 1.1rem;
   }
 }
