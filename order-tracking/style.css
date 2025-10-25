@@ -43,7 +43,7 @@ ul {
 header {
   background-color: var(--secondary-color);
   color: white;
-  padding: 1.5rem 0;
+  padding: 1.1rem 0;
   box-shadow: var(--box-shadow);
 }
 
@@ -64,8 +64,11 @@ header {
   gap: 0.5rem;
 }
 
-.logo i {
-  color: var(--primary-color);
+.logo-img {
+  height: 50px;
+  width: auto;
+  border-radius: 30px;
+  object-fit: contain;
 }
 
 .nav-links {
@@ -374,6 +377,7 @@ footer {
 
 /* Responsive Styles */
 @media (max-width: 760px) {
+
   /* Using vw for smaller screens */
   body {
     font-size: 3.5vw;
@@ -385,6 +389,10 @@ footer {
 
   .logo {
     font-size: 5vw;
+  }
+
+  .logo-img {
+    height: 10vw;
   }
 
   .nav-links a {
@@ -421,6 +429,10 @@ footer {
 
   .footer-container {
     padding: 0 4vw;
+  }
+
+  .footer-bottom {
+    font-size: 0.65rem;
   }
 
   .hz-order-item {
@@ -489,6 +501,7 @@ footer {
 }
 
 @media (min-width: 761px) {
+
   /* Using rem for larger screens */
   body {
     font-size: 1rem;
