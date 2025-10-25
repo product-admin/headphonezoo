@@ -91,7 +91,7 @@ document.getElementById("user_comment_form").addEventListener("submit", async fu
         // Update the column with the new array
         const { error: updateError } = await supabase
             .from("all_customers_comments")
-            .update({ "2809": updatedArray })
+            .update({ "3009": updatedArray })
             .eq("id", 1);
 
         if (updateError) throw updateError;
@@ -168,7 +168,7 @@ async function fetchReviews() {
             div.innerHTML = `
                 <div class="card_clint_rate_date_div"><h3>${review_date}</h3></div>
                 <div class="card_clint_rate_info_div">
-                    <img src="https://headphonezoo-au.com/wp-content/themes/headphonezoo-theme-1/headphonezoo-logo/headphonezoo.webp" alt="p47 wireless bluetooth headphones - headphonezoo" title="p47 wireless bluetooth headphones - headphonezoo">
+                    <img src="p47-wireless-bluetooth-headphones/headphonezoo.webp" alt="p47 wireless bluetooth headphones - headphonezoo" title="p47 wireless bluetooth headphones - headphonezoo">
                     <h4>${reviewer_name}</h4>
                 </div>
                 <div class="card_clint_rate_comment_div"><h5>${comment}</h5></div>

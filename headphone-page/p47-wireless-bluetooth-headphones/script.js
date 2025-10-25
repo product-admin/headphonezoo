@@ -182,21 +182,16 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 const colorVariants = {
     black: {
         images: [
-            'https://headphonezoo-au.com/wp-content/themes/headphonezoo-theme-1/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-1.webp',
-            'https://headphonezoo-au.com/wp-content/themes/headphonezoo-theme-1/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-2.webp',
-            'https://headphonezoo-au.com/wp-content/themes/headphonezoo-theme-1/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-3.webp',
-            'https://headphonezoo-au.com/wp-content/themes/headphonezoo-theme-1/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-4.webp',
-            'https://headphonezoo-au.com/wp-content/themes/headphonezoo-theme-1/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-5.webp'
+            'p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-1.webp',
+            'p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-2.webp',
+            'p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-3.webp',
+            'p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-4.webp',
+            'p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-5.webp'
         ],
         available: true
     },
     white: {
         images: [
-            'https://headphonezoo-au.com/wp-content/themes/headphonezoo-theme-1/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-1.webp',
-            'https://headphonezoo-au.com/wp-content/themes/headphonezoo-theme-1/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-1.webp',
-            'https://headphonezoo-au.com/wp-content/themes/headphonezoo-theme-1/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-1.webp',
-            'https://headphonezoo-au.com/wp-content/themes/headphonezoo-theme-1/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-1.webp',
-            'https://headphonezoo-au.com/wp-content/themes/headphonezoo-theme-1/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-1.webp'
         ],
         available: false // White color is sold out
     },
@@ -891,7 +886,7 @@ function handleBuyClickStandalone() {
 
     // Record click for analytics
     if (typeof insertNewClick === 'function') {
-        insertNewClick('2809').catch(console.error);
+        insertNewClick('3009').catch(console.error);
     }
 
     if (activeBtn) {
@@ -910,7 +905,7 @@ function handleBuyClickStandalone() {
         const productField = document.createElement('input');
         productField.type = 'hidden';
         productField.name = 'add-to-cart';
-        productField.value = '2809';
+        productField.value = '3009';
 
         const quantityField = document.createElement('input');
         quantityField.type = 'hidden';
@@ -951,7 +946,7 @@ function redirectToCheckout() {
     const productField = document.createElement('input');
     productField.type = 'hidden';
     productField.name = 'add-to-cart';
-    productField.value = '2809';
+    productField.value = '3009';
 
     const quantityField = document.createElement('input');
     quantityField.type = 'hidden';
