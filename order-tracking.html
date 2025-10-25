@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Track Your Order</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="order-tracking/style.css" />
+</head>
+
+<body>
+    <section id="order-tracking-section" class="order-tracking-wrapper">
+        <div class="tracking-container">
+            <h2 class="tracking-title">Track Your Order</h2>
+            <p class="tracking-desc">Enter your Order ID and Billing Email to see your order details and shipping
+                updates.</p>
+
+            <div class="tracking-form-box">
+                <form id="trackForm">
+                    <p class="form-row">
+                        <label for="orderid">Order ID</label>
+                        <input id="orderid" name="orderid" type="text" placeholder="Check your order email." required />
+                    </p>
+                    <p class="form-row">
+                        <label for="order_email">Billing Email</label>
+                        <input id="order_email" name="order_email" type="email"
+                            placeholder="Email used during checkout." required />
+                    </p>
+                    <p class="form-row">
+                        <button type="submit">Track Order</button>
+                    </p>
+                </form>
+
+                <div id="result" aria-live="polite" style="margin-top:1rem;"></div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    
+
+    <script>
+        /*
+          Edit these two variables:
+          - endpoint: your WP REST endpoint (replace domain)
+          - token: the token assigned to this origin in the WP admin
+        */
+        const endpoint = 'https://sg-product.com/wp-json/ot-public/v1/order'; // <-- change this
+        const token = 'gEFy02suk4BQE75vsvxwAQhDwPghYmwv'; // <-- change this (from WP admin)
+
+        document.getElementById('trackForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const orderid = document.getElementById('orderid').value.trim();
+            const order_email = document.getElementById('order_email').value.trim();
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<em>Searching…</em>';
+
+            try {
+                const payload = { order_id: orderid, email: order_email, token: token };
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.status === 403) {
+                    resultDiv.innerHTML = '<div class="error">Access denied. Check the token & origin configuration.</div>';
+                    return;
+                }
+                if (res.status === 429) {
+                    resultDiv.innerHTML = '<div class="error">Too many requests. Try again later.</div>';
+                    return;
+                }
+                const data = await res.json();
+
+                if (!data.found) {
+                    resultDiv.innerHTML = `<div class="not-found">${data.message || 'Order not found'}</div>`;
+                    return;
+                }
+
+                // Render order details (safe fields)
+                let html = `<div class="order-result">
+      <h3>Order #${data.order_id} — status: ${data.status}</h3>
+      <p>Total: ${data.total} — Date: ${data.date_created || '—'}</p>
+      <div class="items">`;
+                for (const it of data.items) {
+                    html += `<div class="hz-order-item">
+        <div class="hz-item-thumb">${it.product_image ? `<img src="${it.product_image}" alt="" />` : ''}</div>
+        <div class="hz-item-name-wrap">
+          <div class="hz-item-name">${it.name}</div>
+          <div class="hz-item-meta">Quantity: ${it.quantity} — Subtotal: ${it.subtotal}</div>
+        </div>
+      </div>`;
+                }
+                html += `</div>`;
+                if (data.shipping_tracking) html += `<p>Tracking: ${data.shipping_tracking}${data.shipping_provider ? ' (' + data.shipping_provider + ')' : ''}</p>`;
+                html += `</div>`;
+                resultDiv.innerHTML = html;
+            } catch (err) {
+                console.error(err);
+                resultDiv.innerHTML = '<div class="error">Network error. Try again later.</div>';
+            }
+        });
+    </script>
+
+
+
+
+
+
+
+</body>
+
+</html>

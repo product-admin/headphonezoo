@@ -1,0 +1,490 @@
+/*
+Theme Name: Order Tracking Theme
+Theme URI: https://yourwebsite.com
+Author: Your Name
+Description: Lightweight theme for WooCommerce Order Tracking page
+Version: 1.1
+Text Domain: order-tracking-theme
+*/
+
+:root {
+  --brand-purple: rgb(70, 45, 107);
+  --brand-cyan: rgb(48, 160, 183);
+  --primary-color: var(--brand-cyan);
+  --secondary-color: var(--brand-purple);
+  --accent-color: #e74c3c;
+  --text-color: #333;
+  --border: #e5e7eb;
+
+  /* Enhanced base font sizes - optimized for mobile */
+  --font-xs: clamp(0.7rem, 1.8vw, 0.75rem);
+  --font-sm: clamp(0.75rem, 2vw, 0.85rem);
+  --font-base: clamp(0.8rem, 2.2vw, 0.9rem);
+  --font-md: clamp(0.85rem, 2.5vw, 1rem);
+  --font-lg: clamp(0.9rem, 2.8vw, 1.1rem);
+  --font-xl: clamp(1rem, 3.2vw, 1.3rem);
+  --font-2xl: clamp(1.2rem, 3.8vw, 1.5rem);
+  --font-3xl: clamp(1.4rem, 4.2vw, 1.8rem);
+}
+
+/* ===== RESET & BASE STYLES ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", "Helvetica Neue", sans-serif;
+  font-size: var(--font-base);
+  line-height: 1.6;
+  background-color: #f6f8fb;
+  color: #222;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+a {
+  color: #2a72d4;
+  text-decoration: none;
+  font-size: inherit;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* ===== HEADER & NAVIGATION ===== */
+header {
+  background: linear-gradient(135deg, var(--secondary-color) 0%, var(--brand-cyan) 100%);
+  color: #fff;
+  padding: clamp(0.8rem, 2.5vw, 1.2rem) 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1.5vw, 0.8rem);
+}
+
+.brand-logo {
+  width: clamp(2rem, 6vw, 3rem);
+  height: auto;
+  border-radius: 50%;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: var(--font-xl);
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: clamp(1rem, 3vw, 2rem);
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: var(--font-base);
+}
+
+.nav-links .home-btn {
+  background: #fff;
+  color: var(--secondary-color);
+  padding: clamp(0.5rem, 1.5vw, 0.7rem) clamp(0.8rem, 2vw, 1rem);
+  border-radius: 999px;
+  font-weight: 700;
+  border: 2px solid rgba(255, 255, 255, 0);
+  transition: all 0.3s ease;
+  font-size: var(--font-sm);
+}
+
+.nav-links .home-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--primary-color);
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: var(--font-2xl);
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+/* ===== ORDER TRACKING HERO SECTION ===== */
+.order-hero {
+  text-align: center;
+}
+
+.order-hero h1 {
+  font-size: var(--font-3xl);
+  font-weight: 700;
+  margin-bottom: clamp(0.5rem, 2vw, 1rem);
+  line-height: 1.2;
+}
+
+.order-hero p {
+  font-size: var(--font-lg);
+  margin-bottom: 0;
+}
+
+/* ===== ORDER TRACKING FORM SECTION ===== */
+.order-tracking-section {
+  width: 100%;
+  background: #fff;
+  border-radius: clamp(0.8rem, 3vw, 1.2rem);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.order-tracking-section h2 {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  text-align: center;
+  color: var(--primary-color);
+  margin-bottom: clamp(0.5rem, 2vw, 1rem);
+  line-height: 1.3;
+}
+
+.order-tracking-section p.description {
+  text-align: center;
+  color: #555;
+  font-size: var(--font-base);
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
+  line-height: 1.5;
+}
+
+/* ===== WOOCOMMERCE FORM STYLES ===== */
+.tracking-form-box {
+  width: 100%;
+}
+
+.woocommerce form.track_order {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(0.8rem, 2.5vw, 1.2rem);
+  width: 100%;
+}
+
+.woocommerce form.track_order p {
+  margin: 0;
+  font-size: var(--font-base);
+  width: 100%;
+}
+
+.woocommerce form.track_order p:first-child,
+.woocommerce form.track_order p:nth-child(2) {
+  min-width: 0;
+}
+
+.woocommerce form.track_order .form-row {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.woocommerce form.track_order .form-row-first,
+.woocommerce form.track_order .form-row-last {
+  width: 100%;
+}
+
+.woocommerce form.track_order label {
+  font-weight: 600;
+  margin-bottom: clamp(0.4rem, 1.5vw, 0.6rem);
+  color: var(--text-color);
+  font-size: var(--font-sm);
+}
+
+.woocommerce form.track_order .input-text {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: clamp(0.5rem, 1.5vw, 0.8rem);
+  font-size: var(--font-base);
+  background-color: #fff;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  line-height: 1.4;
+}
+
+.woocommerce form.track_order .input-text:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(48, 160, 183, 0.1);
+}
+
+.woocommerce form.track_order input[type="submit"],
+.woocommerce form.track_order button[type="submit"] {
+  background: linear-gradient(135deg, var(--secondary-color) 0%, var(--brand-cyan) 100%);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: var(--font-base);
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: clamp(0.5rem, 2vw, 1rem);
+}
+
+.woocommerce form.track_order input[type="submit"]:hover,
+.woocommerce form.track_order button[type="submit"]:hover {
+  transform: translateY(-2px);
+}
+
+.woocommerce form.track_order p:first-of-type {
+  grid-column: 1 / -1;
+  color: #555;
+  font-size: var(--font-sm);
+  line-height: 1.5;
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
+  text-align: left;
+}
+
+.woocommerce form.track_order .form-row:last-of-type {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+}
+
+.woocommerce .clear {
+  clear: both;
+}
+
+/* ===== FOOTER STYLES ===== */
+footer {
+  background: var(--secondary-color);
+  color: #fff;
+  padding: clamp(2rem, 6vw, 3.5rem) 0;
+  text-align: center;
+}
+
+.footer-content .logo {
+  font-weight: 700;
+  font-size: var(--font-lg);
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  gap: clamp(1rem, 3vw, 1.5rem);
+  margin: clamp(1rem, 3vw, 1.5rem) 0 0 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: var(--font-base);
+}
+
+.footer-links a:hover {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.copyright {
+  opacity: 0.8;
+  margin-top: clamp(0.8rem, 2.5vw, 1rem);
+  font-size: var(--font-sm);
+}
+
+/* ===== UTILITY CLASSES ===== */
+.text-responsive {
+  font-size: var(--font-base);
+}
+
+.heading-responsive {
+  font-size: var(--font-2xl);
+}
+
+.subheading-responsive {
+  font-size: var(--font-lg);
+}
+
+
+
+
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Tablet & Mobile (768px and below) */
+@media (max-width: 768px) {
+
+  /* Navigation adjustments */
+  .nav-links {
+    gap: clamp(0.5rem, 2vw, 1rem);
+  }
+
+  .logo {
+    font-size: var(--font-lg);
+  }
+
+  .brand-logo {
+    width: clamp(1.8rem, 5vw, 2.5rem);
+  }
+
+  /* Form adjustments for mobile */
+  .woocommerce form.track_order {
+    grid-template-columns: 1fr;
+    gap: clamp(0.6rem, 2vw, 1rem);
+  }
+
+  .woocommerce form.track_order .input-text {
+    width: 90%;
+    padding: clamp(0.7rem, 2.5vw, 0.9rem) clamp(0.8rem, 2.5vw, 1rem);
+    font-size: max(14px, var(--font-base));
+    margin: 0 auto;
+  }
+
+  .woocommerce form.track_order label {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: var(--font-sm);
+  }
+
+  .woocommerce form.track_order input[type="submit"],
+  .woocommerce form.track_order button[type="submit"] {
+    width: 90%;
+    padding: clamp(0.7rem, 2.5vw, 0.9rem) clamp(1rem, 3.5vw, 1.2rem);
+    font-size: max(14px, var(--font-base));
+    margin: clamp(0.3rem, 1vw, 0.5rem) auto 0 auto;
+  }
+
+  .woocommerce form.track_order p:first-of-type {
+    text-align: center;
+    margin-bottom: clamp(1rem, 3vw, 1.5rem);
+    font-size: var(--font-sm);
+  }
+
+  /* Smaller hero text on mobile */
+  .order-hero h1 {
+    font-size: var(--font-2xl);
+  }
+
+  .order-hero p {
+    font-size: var(--font-base);
+  }
+
+  /* Full-bleed tracking section on small screens */
+  .order-tracking-section {
+    width: 100vw;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-radius: 0;
+  }
+}
+
+/* Small Mobile (480px and below) */
+@media (max-width: 480px) {
+  .woocommerce form.track_order .input-text {
+    width: 90%;
+    padding: clamp(0.6rem, 2.2vw, 0.8rem) clamp(0.7rem, 2.2vw, 0.9rem);
+    font-size: max(13px, var(--font-base));
+  }
+
+  .woocommerce form.track_order label {
+    width: 90%;
+    font-size: var(--font-xs);
+  }
+
+  .woocommerce form.track_order input[type="submit"],
+  .woocommerce form.track_order button[type="submit"] {
+    width: 90%;
+    padding: clamp(0.6rem, 2.2vw, 0.8rem) clamp(0.8rem, 3vw, 1rem);
+    font-size: max(13px, var(--font-base));
+  }
+
+  .woocommerce form.track_order p:first-of-type {
+    font-size: var(--font-xs);
+  }
+
+  /* Even smaller text for very small screens */
+  .order-hero h1 {
+    font-size: var(--font-xl);
+  }
+
+  .order-hero p {
+    font-size: var(--font-sm);
+  }
+
+  .order-tracking-section h2 {
+    font-size: var(--font-lg);
+  }
+
+  .order-tracking-section p.description {
+    font-size: var(--font-sm);
+  }
+
+  .copyright {
+    font-size: var(--font-xs);
+  }
+
+  /* Ensure full-bleed at very small screens too */
+  .order-tracking-section {
+    width: 100vw;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-radius: 0;
+  }
+}
+
+/* Extra Small Mobile (360px and below) */
+@media (max-width: 360px) {
+  body {
+    font-size: var(--font-sm);
+  }
+
+  .woocommerce form.track_order .input-text {
+    font-size: max(12px, var(--font-sm));
+  }
+
+  .woocommerce form.track_order input[type="submit"],
+  .woocommerce form.track_order button[type="submit"] {
+    font-size: max(12px, var(--font-sm));
+  }
+
+  .order-hero h1 {
+    font-size: var(--font-lg);
+  }
+
+  .order-hero p {
+    font-size: var(--font-xs);
+  }
+}
