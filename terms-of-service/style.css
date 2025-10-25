@@ -1,14 +1,3 @@
-/*
-Theme Name: Terms of Service Theme
-Theme URI: https://headphonezoo-au.com/terms-of-service
-Author: Bandar Zuhair
-Author URI: https://headphonezoo-au.com/terms-of-service
-Description: A WordPress theme generated from the provided static site. Keep customizing as needed.
-Version: 1.0
-License: GNU General Public License v2 or later
-Text Domain: terms-of-service-theme
-*/
-
 /* Base state for all animated elements */
 :root {
     --primary: #6366f1;

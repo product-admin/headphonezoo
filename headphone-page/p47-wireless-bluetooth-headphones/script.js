@@ -899,7 +899,7 @@ function handleBuyClickStandalone() {
     setTimeout(() => {
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = 'https://headphonezoo-au.com/checkout';
+        form.action = 'https://sg-product.com/checkout';
 
         // Add hidden fields to add product to cart
         const productField = document.createElement('input');
@@ -940,7 +940,7 @@ function redirectToCheckout() {
     // Method 1: Try using a hidden form to maintain session (most reliable)
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = 'https://headphonezoo-au.com/checkout';
+    form.action = 'https://sg-product.com/checkout';
 
     // Add hidden fields to add product to cart
     const productField = document.createElement('input');
@@ -1119,7 +1119,7 @@ document.addEventListener('DOMContentLoaded', function () {
 document.getElementById('ctaBtn').addEventListener('click', function (e) {
     e.preventDefault();
 
-    const WP_ROOT = 'https://headphonezoo-au.com'; // change to your domain
+    const WP_ROOT = 'https://sg-product.com'; // change to your domain
     const PRODUCT_ID = 2594;                      // change to your product id
     const color = document.getElementById('colorSelect')?.value || ''; // if you have color select
 
