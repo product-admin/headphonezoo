@@ -7,10 +7,12 @@
      * SGD: $31.87 → $19.12
      * AUD: $36.87 → $24.12
    - Updates delivery date range (7-9 days for SGD, 7-12 days for AUD)
+   - Updates shipping answer in FAQ (7-9 days for SGD, 7-12 days for AUD)
    - Triggers DynamicNumbers with currency-specific storage
    - Prevents duplicate number changes on repeated clicks
    - Closes mobile navigation after currency selection
    - Shows professional success notification with smooth animations
+   - Handles refund policy link click to scroll and expand FAQ
    
    ============================================ */
 
@@ -27,6 +29,9 @@ class CurrencyManager {
 
         // Apply initial currency settings
         this.applyCurrencySettings(this.currentCurrency);
+
+        // Setup refund policy link handler
+        this.setupRefundPolicyLink();
     }
 
     getStoredCurrency() {
@@ -238,6 +243,7 @@ class CurrencyManager {
         this.updateDeliveryDate(currency);
         this.updateCurrencyDisplay(currency);
         this.triggerDynamicNumbers(currency);
+        this.updateShippingAnswer(currency);
     }
 
     updatePrices(currency) {
@@ -449,6 +455,63 @@ class CurrencyManager {
                 continue;
             }
         }
+    }
+
+    updateShippingAnswer(currency) {
+        const shippingAnswer = document.getElementById('shippingAnswer');
+        if (!shippingAnswer) return;
+
+        // Define shipping time based on currency
+        const shippingTimes = {
+            SGD: '7-9 business days',
+            AUD: '7-12 business days'
+        };
+
+        const shippingTime = shippingTimes[currency] || shippingTimes.SGD;
+        shippingAnswer.textContent = `We offer free standard shipping which typically takes ${shippingTime}.`;
+    }
+
+    setupRefundPolicyLink() {
+        const refundPolicyLink = document.querySelector('.refund-policy-link');
+        if (!refundPolicyLink) return;
+
+        refundPolicyLink.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            // Find the return-policy element
+            const returnPolicyElement = document.getElementById('return-policy');
+            if (!returnPolicyElement) return;
+
+            // Find the FAQ answer within the return-policy item
+            const faqAnswer = returnPolicyElement.querySelector('.faq-answer');
+            if (!faqAnswer) return;
+
+            // Check if FAQ is currently hidden
+            const isHidden = !returnPolicyElement.classList.contains('active');
+
+            // Scroll to the element with offset for header
+            const headerOffset = 80;
+            const elementPosition = returnPolicyElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+
+            // If FAQ is hidden, show it after scroll
+            if (isHidden) {
+                setTimeout(() => {
+                    // Close all FAQ items first
+                    document.querySelectorAll('.faq-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+
+                    // Open the return policy FAQ
+                    returnPolicyElement.classList.add('active');
+                }, 300); // Wait for scroll to start
+            }
+        });
     }
 }
 
