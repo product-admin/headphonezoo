@@ -1021,20 +1021,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Handle currency option clicks
-        currencyMenu.addEventListener('click', function (e) {
-            if (e.target.classList.contains('currency-option')) {
-                e.preventDefault();
-                const href = e.target.getAttribute('href');
-                if (href) {
-                    // Close dropdown
-                    currencyTrigger.classList.remove('active');
-                    currencyMenu.classList.remove('show');
-
-                    // Navigate to the currency page
-                    window.location.href = href;
-                }
-            }
-        });
+        // Note: Currency changes are now handled by currency-changing.js
+        // No navigation needed - changes happen dynamically
     }
 
     // Mobile currency dropdown
@@ -1077,21 +1065,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Handle mobile currency option clicks
-        mobileCurrencyMenu.addEventListener('click', function (e) {
-            if (e.target.classList.contains('mobile-currency-option')) {
-                e.preventDefault();
-                const href = e.target.getAttribute('href');
-                if (href) {
-                    // Close dropdown and mobile nav if open
-                    mobileCurrencyTrigger.classList.remove('active');
-                    mobileCurrencyMenu.classList.remove('show');
-                    closeMobileNav();
-
-                    // Navigate to the currency page
-                    window.location.href = href;
-                }
-            }
-        });
+        // Note: Currency changes are now handled by currency-changing.js
+        // No navigation needed - changes happen dynamically
     }
 
 

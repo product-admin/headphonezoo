@@ -220,7 +220,7 @@ nav {
 }
 
 .nav-links a:hover {
-    color: var(--primary-color);
+    color: rgb(0, 255, 242);
 }
 
 .mobile-menu-btn {
