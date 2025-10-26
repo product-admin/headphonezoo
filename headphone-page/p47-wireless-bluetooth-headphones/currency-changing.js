@@ -10,6 +10,7 @@
    - Triggers DynamicNumbers with currency-specific storage
    - Prevents duplicate number changes on repeated clicks
    - Closes mobile navigation after currency selection
+   - Shows professional success notification with smooth animations
    
    ============================================ */
 
@@ -35,6 +36,10 @@ class CurrencyManager {
         } catch (e) {
             return null;
         }
+    }
+
+    getCurrentCurrency() {
+        return this.currentCurrency;
     }
 
     storeCurrency(currency) {
@@ -97,6 +102,9 @@ class CurrencyManager {
 
         // Close mobile navigation if open
         this.closeMobileNav();
+
+        // Show success notification
+        this.showCurrencyChangeNotification(newCurrency);
     }
 
     closeDropdowns() {
@@ -126,6 +134,103 @@ class CurrencyManager {
             overlay.classList.remove('active');
             document.body.style.overflow = 'auto';
         }
+    }
+
+    showCurrencyChangeNotification(currency) {
+        // Get short currency name
+        const currencyNames = {
+            SGD: 'SGD',
+            AUD: 'AUD'
+        };
+        const currencyName = currencyNames[currency] || currency;
+
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = 'currency-change-notification';
+        notification.style.cssText = `
+            position: fixed;
+            top: 30px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            width: fit-content;
+            max-width: 280px;
+            transform: translateX(calc(100% + 40px));
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        `;
+
+        // Add responsive media query styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @media (max-width: 768px) {
+                .currency-change-notification {
+                    top: 40px !important;
+                    right: 10px !important;
+                    max-width: calc(100% - 20px) !important;
+                    min-width: auto !important;
+                    padding: 12px 16px !important;
+                    font-size: 13px !important;
+                }
+            }
+            @media (max-width: 480px) {
+                .currency-change-notification {
+                    top: 50px !important;
+                    right: 8px !important;
+                    padding: 10px 14px !important;
+                    font-size: 12px !important;
+                    gap: 8px !important;
+                }
+                .currency-change-notification svg {
+                    width: 20px !important;
+                    height: 20px !important;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        notification.innerHTML = `
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span>Currency Changed To ${currencyName}</span>
+        `;
+
+        document.body.appendChild(notification);
+
+        // Trigger animation - slide in from right with slower movement
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                notification.style.transform = 'translateX(0)';
+                notification.style.opacity = '1';
+            });
+        });
+
+        // Auto-remove after 2.5 seconds with faster slide out animation
+        setTimeout(() => {
+            // Change transition to faster exit animation
+            notification.style.transition = 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            notification.style.transform = 'translateX(calc(100% + 40px))';
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    notification.remove();
+                }
+            }, 500);
+        }, 2500);
     }
 
     applyCurrencySettings(currency) {
@@ -349,6 +454,6 @@ class CurrencyManager {
 
 // Initialize Currency Manager when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new CurrencyManager();
+    window.currencyManager = new CurrencyManager();
 });
 

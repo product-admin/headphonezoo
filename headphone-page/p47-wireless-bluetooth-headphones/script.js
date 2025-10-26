@@ -884,9 +884,27 @@ function handleBuyClickStandalone() {
     debugLog('Standalone handler: Selected color:', color);
     debugLog('Standalone handler: Active button:', activeBtn?.className);
 
+    // Get current currency and set corresponding checkout URL and product ID
+    const currentCurrency = window.currencyManager?.getCurrentCurrency() || 'SGD';
+    const checkoutUrls = {
+        SGD: 'https://sg-product.com/checkout',
+        AUD: 'https://au-product.com/checkout'
+    };
+    const productIds = {
+        SGD: '3009',
+        AUD: '3067'
+    };
+
+    const checkoutUrl = checkoutUrls[currentCurrency] || checkoutUrls.SGD;
+    const productId = productIds[currentCurrency] || productIds.SGD;
+
+    debugLog('Standalone handler: Current currency:', currentCurrency);
+    debugLog('Standalone handler: Checkout URL:', checkoutUrl);
+    debugLog('Standalone handler: Product ID:', productId);
+
     // Record click for analytics
     if (typeof insertNewClick === 'function') {
-        insertNewClick('3009').catch(console.error);
+        insertNewClick(productId).catch(console.error);
     }
 
     if (activeBtn) {
@@ -899,13 +917,13 @@ function handleBuyClickStandalone() {
     setTimeout(() => {
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = 'https://sg-product.com/checkout';
+        form.action = checkoutUrl;
 
         // Add hidden fields to add product to cart
         const productField = document.createElement('input');
         productField.type = 'hidden';
         productField.name = 'add-to-cart';
-        productField.value = '3009';
+        productField.value = productId;
 
         const quantityField = document.createElement('input');
         quantityField.type = 'hidden';
@@ -1091,26 +1109,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-document.getElementById('ctaBtn').addEventListener('click', function (e) {
-    e.preventDefault();
-
-    const WP_ROOT = 'https://sg-product.com'; // change to your domain
-    const PRODUCT_ID = 2594;                      // change to your product id
-    const color = document.getElementById('colorSelect')?.value || ''; // if you have color select
-
-    // Build URL; include timestamp to avoid caching
-    let url = `${WP_ROOT}/force-single-add.php?product=${encodeURIComponent(PRODUCT_ID)}&t=${Date.now()}`;
-
-    // If color/variation
-    if (color) {
-        // pass as attribute_pa_color (WooCommerce expects attribute_pa_<slug>)
-        url += `&attribute_pa_color=${encodeURIComponent(color)}`;
-        // if you also know variation_id you can add &variation_id=200
-    }
-
-    // navigate in same tab (recommended)
-    window.location.href = url;
-
-    // OR open in new tab:
-    // window.open(url, '_blank', 'noopener');
-});
+// Additional ctaBtn handler removed - already handled by handleBuyClickStandalone above
+// Both ctaBtn and stickyBuyNowBtn use the same handler with currency-specific URLs
