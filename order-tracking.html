@@ -187,7 +187,7 @@
                 const data = outcome.success.data;
                 let html = `<div class="order-result">
               <h3>Order #${data.order_id || ''} — status: ${data.status || ''}</h3>
-              <p>Total: ${data.totals ? data.totals.total : ''} — Date: ${data.date_created || '—'}</p>
+              <p>Total: ${data.totals ? data.totals.total : ''} — Date: ${formatDate(data.date_created)}</p>
               <div class="order-items">`;
                 for (const it of data.items || []) {
                     html += `<div class="hz-order-item">
@@ -212,7 +212,7 @@
                 ${renderAddressBox('Billing address', data.billing)}
                 ${renderAddressBox('Shipping address', data.shipping)}
               </div>
-              <div style="margin-top:10px;font-size:0.95em;color:#666">Source: ${outcome.success.endpoint}</div>
+              <div style="margin-top:10px;font-size:0.95em;color:#666">Store: ${outcome.success.endpoint}</div>
             </div>`;
                 resultDiv.innerHTML = html;
                 return;
@@ -229,6 +229,30 @@
             helper += `</div>`;
             resultDiv.innerHTML = helper;
         });
+
+
+
+
+
+
+
+        // Format date string like "2025-10-27T18:29:32+00:00" to "27 Oct 2025"
+        function formatDate(dateString) {
+            if (!dateString) return '—';
+            try {
+                const date = new Date(dateString);
+                // Format using Intl.DateTimeFormat for localization and short month names
+                const formatted = new Intl.DateTimeFormat('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                }).format(date);
+                return formatted; // e.g., "27 Oct 2025"
+            } catch (e) {
+                console.warn('Date format error:', e);
+                return dateString; // fallback
+            }
+        }
     </script>
 
 
