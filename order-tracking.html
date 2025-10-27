@@ -187,7 +187,7 @@
                 const data = outcome.success.data;
                 let html = `<div class="order-result">
               <h3>Order #${data.order_id || ''} — status: ${data.status || ''}</h3>
-              <p>Total: ${data.totals ? data.totals.total : ''} — Date: ${formatDate(data.date_created)}</p>
+              <p>Total: ${data.totals ? data.totals.total : ''} — Purchase Date: ${formatDate(data.date_created)}</p>
               <div class="order-items">`;
                 for (const it of data.items || []) {
                     html += `<div class="hz-order-item">
