@@ -887,8 +887,8 @@ function handleBuyClickStandalone() {
     // Get current currency and set corresponding checkout URL and product ID
     const currentCurrency = window.currencyManager?.getCurrentCurrency() || 'SGD';
     const checkoutUrls = {
-        SGD: 'https://sg-product.com/checkout',
-        AUD: 'https://au-product.com/checkout'
+        SGD: 'https://sg-checkout.headphonezoo.com/',
+        AUD: 'https://au-checkout.headphonezoo.com/'
     };
     const productIds = {
         SGD: '3009',
@@ -954,46 +954,6 @@ function handleBuyClickStandalone() {
         }, 1000);
     }, 300);
 }
-function redirectToCheckout() {
-    // Method 1: Try using a hidden form to maintain session (most reliable)
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = 'https://sg-product.com/checkout';
-
-    // Add hidden fields to add product to cart
-    const productField = document.createElement('input');
-    productField.type = 'hidden';
-    productField.name = 'add-to-cart';
-    productField.value = '3009';
-
-    const quantityField = document.createElement('input');
-    quantityField.type = 'hidden';
-    quantityField.name = 'quantity';
-    quantityField.value = '1';
-
-    // Add color if selected
-    const color = document.getElementById('colorSelect')?.value || '';
-    if (color) {
-        const colorField = document.createElement('input');
-        colorField.type = 'hidden';
-        colorField.name = 'selected_color';
-        colorField.value = color;
-        form.appendChild(colorField);
-    }
-
-    form.appendChild(productField);
-    form.appendChild(quantityField);
-
-    // Append form to body and submit
-    document.body.appendChild(form);
-    form.submit();
-
-    // Fallback: if form submission fails, use direct redirect
-    setTimeout(() => {
-        document.body.removeChild(form);
-        window.location.href = 'https://headphonezoo-au.com/checkout';
-    }, 1000);
-}
 
 /**
  * Currency Dropdown Functionality
@@ -1037,10 +997,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 currencyMenu.classList.remove('show');
             }
         });
-
-        // Handle currency option clicks
-        // Note: Currency changes are now handled by currency-changing.js
-        // No navigation needed - changes happen dynamically
     }
 
     // Mobile currency dropdown
@@ -1081,10 +1037,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 mobileCurrencyMenu.classList.remove('show');
             }
         });
-
-        // Handle mobile currency option clicks
-        // Note: Currency changes are now handled by currency-changing.js
-        // No navigation needed - changes happen dynamically
     }
 
 
@@ -1096,18 +1048,3 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelector('.cta-button')?.addEventListener('click', handleBuyClickStandalone);
     document.getElementById('stickyBuyNowBtn')?.addEventListener('click', handleBuyClickStandalone);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Additional ctaBtn handler removed - already handled by handleBuyClickStandalone above
-// Both ctaBtn and stickyBuyNowBtn use the same handler with currency-specific URLs
