@@ -115,8 +115,43 @@
                     <img src="headphonezoo.webp" alt="headphonezoo logo" title="headphonezoo logo" class="logo-img">
                     <span class="brand-name">HeadphoneZoo</span>
                 </div>
+
+                <!-- Desktop Navigation -->
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="#top-sold-2025-title" class="nav-link"
+                            onclick="handleNavClick(event, 'top-sold-2025-title')">Products</a></li>
+                    <li><a href="#about-us-section-title-id" class="nav-link"
+                            onclick="handleNavClick(event, 'about-us-section-title-id')">About</a></li>
+                    <li><a href="#partners-title" class="nav-link"
+                            onclick="handleNavClick(event, 'partners-title')">Partners</a></li>
+                    <li><a href="#why-us-section-title-id" class="nav-link"
+                            onclick="handleNavClick(event, 'why-us-section-title-id')">Why Us</a></li>
+                </ul>
+
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
         </nav>
+
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu-overlay" id="mobile-menu-overlay">
+            <div class="mobile-menu-content">
+                <ul class="mobile-nav-menu">
+                    <li><a href="#top-sold-2025-title" class="mobile-nav-link"
+                            onclick="handleMobileNavClick(event, 'top-sold-2025-title')">Products</a></li>
+                    <li><a href="#about-us-section-title-id" class="mobile-nav-link"
+                            onclick="handleMobileNavClick(event, 'about-us-section-title-id')">About</a></li>
+                    <li><a href="#partners-title" class="mobile-nav-link"
+                            onclick="handleMobileNavClick(event, 'partners-title')">Partners</a></li>
+                    <li><a href="#why-us-section-title-id" class="mobile-nav-link"
+                            onclick="handleMobileNavClick(event, 'why-us-section-title-id')">Why Us</a></li>
+                </ul>
+            </div>
+        </div>
     </header>
 
 
@@ -130,15 +165,14 @@
             <div class="hero-particles"></div>
             <div class="hero-gradient"></div>
         </div>
-        <div class="hero-content">
+        <div class="hero-content" x`>
             <div class="hero-badge">Trusted by 20,000+ Music Lovers</div>
             <h1 class="hero-title">
                 <span class="title-line">Feel the Music</span>
                 <span class="title-line">Hear Every Detail</span>
             </h1>
-            <p class="hero-description">We're passionate about great sound. After testing 73+ headphone models, we've
-                curated a selection of quality headphones that deliver excellent audio performance at competitive
-                prices. Shipping only to Australia and Singapore.</p>
+            <p class="hero-description">We love great sound. After testing 70+ models, we picked top-quality headphones
+                with excellent audio at fair prices<br>shipping to Singapore & Australia & Indonesia.</p>
             <div class="hero-actions">
                 <button class="cta-primary" onclick="scrollToSection('about-us-section-title-id')"
                     title="About HeadphoneZoo - headphonezoo">About us</button>
@@ -156,23 +190,17 @@
 
 
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="cta-background">
-            <div class="cta-particles"></div>
-        </div>
-        <div class="container">
-            <div class="cta-content">
-                <h2>Join 20,000+ Happy Customers</h2>
-                <p>Discover why music lovers trust HeadphoneZoo for their audio needs. Free shipping, 30-day returns,
-                    and friendly support included.</p>
-                <div class="cta-actions">
-                    <button class="cta-primary large" onclick="scrollToSection('top-sold-2025-title')">Browse Top Sold
-                        Products</button>
-                </div>
-            </div>
-        </div>
-    </section>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -184,9 +212,10 @@
         <div class="container">
             <div class="products-header">
                 <div class="section-badge">Customer Favorites</div>
-                <h2 id="top-sold-2025-title">Best-Selling <span class="gradient-text">Headphones 2025</span></h2>
-                <p class="section-subtitle">Hand-picked by our team, validated by our customers. These are the
-                    headphones that consistently receive positive feedback and reviews.</p>
+                <h2 id="top-sold-2025-title" class="hero-title">Best-Selling<br> <span class="gradient-text">Headphones
+                        2025</span></h2>
+                <p class="section-subtitle">Tested by our team - loved by customers<br>these headphones are what we
+                    recommend.</p>
             </div>
 
             <!-- Desktop/Grid -->
@@ -240,14 +269,18 @@
 
 
 
+
+
+
     <!-- Brand Description Section -->
     <section class="description-section">
         <div class="container">
             <div class="description-content">
                 <div id="about-us-section-title-id" class="section-badge">About HeadphoneZoo</div>
-                <h2>Why 20,000+ Customers <span class="gradient-text">Choose HeadphoneZoo</span></h2>
-                <p class="lead-text">Since 2020, we've been dedicated to helping people find great headphones. Our team
-                    has tested over 73 headphone models to bring you quality options at fair prices.</p>
+                <h2 class="hero-title">Why 20,000+ Customers<br> <span class="gradient-text">Choose HeadphoneZoo</span>
+                </h2>
+                <p class="lead-text">Since 2020, we've helped people find great headphones<br>testing 70+ models to
+                    offer quality at fair prices.</p>
 
                 <div class="stats-grid">
                     <div class="stat-item">
@@ -265,12 +298,112 @@
                 </div>
 
                 <div class="mission-content">
-                    <p><strong>Our Approach:</strong> Every headphone we recommend has been tested for sound quality,
-                        comfort, durability, and value. We focus on what matters most: clear audio, comfortable fit,
-                        reliable connectivity, and good battery life.</p>
-                    <p><strong>Your Guarantee:</strong> 30-day money-back guarantee, free shipping Singapore &
-                        Australia-wide, and
-                        helpful customer support. We stand behind our recommendations.</p>
+                    <p><strong>Our Approach:</strong> We test every headphone for sound, comfort, durability, and value
+                        — focusing on what truly matters.</p>
+                    <p><strong>Your Guarantee:</strong> 30-day money-back, free shipping in Singapore & Australia &
+                        Indonesia, and dedicated support you can trust.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Trusted Global Partners Section -->
+    <section class="partners-section" aria-labelledby="partners-title">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Trusted Global Partners</div>
+                <h2 id="partners-title" class="hero-title">Working With the Best to<br> <span
+                        class="gradient-text">Deliver the Best</span>
+                </h2>
+                <p class="section-subtitle">We partner with top e-commerce and logistics networks to deliver original,
+                    high-quality products fast.</p>
+            </div>
+
+            <div class="partners-content">
+                <p class="partners-description">We work with verified global partners like Amazon, Temu, Shopee, and
+                    AliExpress to ensure fast delivery and genuine products. Each supplier is trusted, vetted, and
+                    selected for quality and reliability — bringing you top headphones at competitive prices.</p>
+
+                <div class="partners-logo-grid" role="list" aria-label="Trusted e-commerce and logistics partners">
+                    <div class="partner-logo-item" role="listitem">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/06/Amazon_2024.svg"
+                            alt="Amazon - Trusted Partner" class="partner-logo" loading="lazy">
+                    </div>
+                    <div class="partner-logo-item" role="listitem">
+                        <img src="https://brandlogos.net/wp-content/uploads/2023/09/temu-logo_brandlogos.net_shd2g-512x512.png"
+                            alt="Temu - Trusted Partner" class="partner-logo" loading="lazy">
+                    </div>
+                    <div class="partner-logo-item" role="listitem">
+                        <img src="https://1000logos.net/wp-content/uploads/2021/05/Shein-logo.png"
+                            alt="SHEIN - Trusted Partner" class="partner-logo" loading="lazy">
+                    </div>
+                    <div class="partner-logo-item" role="listitem">
+                        <img src="https://www.bee.id/wp-content/uploads/2022/04/logo-shopee.png"
+                            alt="Shopee - Trusted Partner" class="partner-logo" loading="lazy">
+                    </div>
+                    <div class="partner-logo-item" role="listitem">
+                        <img src="https://yt3.googleusercontent.com/UogXN46gIwp8BYWgpTO8D7XX-KXK0lJMZBL00ACzsjBmouWqV7m8Dk6a0C8brSYON-zZfgYZqg=s900-c-k-c0x00ffffff-no-rj"
+                            alt="Lazada - Trusted Partner" class="partner-logo" loading="lazy">
+                    </div>
+                    <div class="partner-logo-item" role="listitem">
+                        <img src="https://ae01.alicdn.com/kf/Sa0202ec8a96a4085962acfc27e9ffd04F/1080x1080.jpg"
+                            alt="AliExpress - Trusted Partner" class="partner-logo" loading="lazy">
+                    </div>
+                    <div class="partner-logo-item" role="listitem">
+                        <img src="https://i.ytimg.com/vi/yZsNBFZcxHM/maxresdefault.jpg"
+                            alt="Dropshipzone - Trusted Partner" class="partner-logo" loading="lazy">
+                    </div>
+                    <div class="partner-logo-item" role="listitem">
+                        <img src="https://blob.cloudcomputing.id/images/4208c130-edc1-4774-91b8-0b62a5fae914/logo-alibaba-group-l-min.jpg"
+                            alt="Alibaba - Trusted Partner" class="partner-logo" loading="lazy">
+                    </div>
+                </div>
+
+                <div class="partners-highlights">
+                    <div class="partners-highlight-item">
+                        <div class="partners-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12l2 2 4-4" />
+                                <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3" />
+                                <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3" />
+                                <path d="M12 3c0 1-1 3-3 3s-3-2-3-3 1-3 3-3 3 2 3 3" />
+                                <path d="M12 21c0-1 1-3 3-3s3 2 3 3-1 3-3 3-3-2-3-3" />
+                            </svg>
+                        </div>
+                        <h3>Verified Suppliers</h3>
+                        <p>Every partner is verified and trusted to deliver only authentic products.</p>
+                    </div>
+                    <div class="partners-highlight-item">
+                        <div class="partners-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                                <path d="M2 17l10 5 10-5" />
+                                <path d="M2 12l10 5 10-5" />
+                            </svg>
+                        </div>
+                        <h3>Smart Logistics</h3>
+                        <p>Fast delivery through trusted logistics partners.</p>
+                    </div>
+                    <div class="partners-highlight-item">
+                        <div class="partners-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                            </svg>
+                        </div>
+                        <h3>Quality Guaranteed</h3>
+                        <p>Built on trust and quality, not just reselling.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -284,9 +417,8 @@
         <div class="container">
             <div class="section-header">
                 <div id="why-us-section-title-id" class="section-badge">Why Choose Us</div>
-                <h2>Thorough Testing. <span class="gradient-text">Reliable Results.</span></h2>
-                <p class="section-subtitle">Our team tests every headphone in real-world conditions—from your morning
-                    commute to late-night listening sessions.</p>
+                <h2 class="hero-title">Thorough Testing.<br> <span class="gradient-text">Reliable Results.</span></h2>
+                <p class="section-subtitle">Tested in real life — from commute to late night.</p>
             </div>
 
             <div class="features-grid">
@@ -299,8 +431,7 @@
                         </svg>
                     </div>
                     <h3>Careful Selection</h3>
-                    <p>Our team spends time testing each model thoroughly. No marketing hype—just honest, helpful
-                        reviews that help you make the right choice for your needs and budget.</p>
+                    <p>Thoroughly tested, no hype — just honest reviews to guide your choice.</p>
                 </div>
 
                 <div class="feature-card">
@@ -311,8 +442,7 @@
                         </svg>
                     </div>
                     <h3>Real-World Testing</h3>
-                    <p>From long workdays to gaming sessions, we test durability, comfort, and performance in the
-                        conditions you'll actually use them. Every recommendation is backed by practical testing.</p>
+                    <p>Tested for real life — durable, comfortable, and performance-ready.</p>
                 </div>
 
                 <div class="feature-card">
@@ -322,8 +452,7 @@
                         </svg>
                     </div>
                     <h3>30-Day Satisfaction Guarantee</h3>
-                    <p>We're confident in our recommendations and offer a 30-day money-back guarantee on every purchase.
-                        Plus, free shipping Singapore & Australia-wide and helpful customer support.</p>
+                    <p>30-day returns, free shipping, and support you can count on.</p>
                 </div>
             </div>
         </div>
@@ -331,47 +460,23 @@
 
 
 
-    <!-- Social Media Section -->
-    <section class="social-section">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-badge">Join Our Community</div>
-                <h2>Connect With <span class="gradient-text">Music Lovers</span></h2>
-                <p class="section-subtitle">Get helpful tips, product updates, and first access to new headphone
-                    releases.</p>
-            </div>
 
-            <div class="social-grid">
-                <a href="https://www.instagram.com/headphonezoo/" target="_blank" class="social-card"
-                    title="Follow HeadphoneZoo on Instagram - headphonezoo">
-                    <div class="social-icon instagram">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                        </svg>
-                    </div>
-                    <div class="social-info">
-                        <h3>Instagram</h3>
-                        <p>Product Reviews & Updates</p>
-                    </div>
-                </a>
 
-                <a href="https://www.tiktok.com/@headphonezoostore" target="_blank" class="social-card"
-                    title="Follow HeadphoneZoo on TikTok - headphonezoo">
-                    <div class="social-icon tiktok">
-                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                            <path
-                                d="M12.5 2h3.1c.2 2.6 1.8 4.4 4.4 4.6v3.2c-1.7-.1-3.2-.7-4.4-1.7v6.7c0 3.8-3 6.9-6.8 6.9S2 18.6 2 14.8s3.1-6.8 6.9-6.8c.5 0 1 .1 1.5.2v3.3c-.5-.2-1-.3-1.5-.3-2 0-3.6 1.6-3.6 3.6s1.6 3.7 3.6 3.7 3.6-1.6 3.6-3.6V2z" />
-                        </svg>
-                    </div>
-                    <div class="social-info">
-                        <h3>TikTok</h3>
-                        <p>Product Testing & Audio Tips</p>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -388,8 +493,7 @@
                         <img src="headphonezoo.webp" alt="headphonezoo logo" class="logo-img">
                         <span class="brand-name">HeadphoneZoo</span>
                     </div>
-                    <p>Dedicated to helping you find great headphones since 2020. We've tested over 73 models to bring
-                        you quality headphones at fair prices.
+                    <p>Since 2020 — tested, trusted, and fairly priced headphones.
                     </p>
                 </div>
             </div>
@@ -413,7 +517,7 @@
                         <span>Secure Payments</span>
                     </div>
                 </div>
-                <p>&copy; 2025 HeadphoneZoo. All rights reserved. Your journey to perfect sound starts here.</p>
+                <p>&copy; 2025 HeadphoneZoo. All rights reserved.</p>
                 <div class="footer-legal">
                     <a href="https://headphonezoo.com/privacy-policy" title="Privacy Policy - headphonezoo">Privacy
                         Policy</a>

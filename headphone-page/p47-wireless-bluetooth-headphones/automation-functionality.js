@@ -189,13 +189,13 @@ class DeliveryDateCalculator {
         };
 
         if (minDate.getTime() === maxDate.getTime()) {
-            return `You will have it by ${formatDate(minDate)}`;
+            return `Estimated delivery by ${formatDate(minDate)}`;
         } else if (sameMonth && sameYear) {
             const month = minDate.toLocaleString('default', { month: 'short' });
             const year = minDate.getFullYear();
-            return `You will have it by ${minDate.getDate()}-${maxDate.getDate()} ${month} ${year}`;
+            return `Estimated delivery by ${minDate.getDate()}-${maxDate.getDate()} ${month} ${year}`;
         } else {
-            return `You will have it by ${formatDate(minDate)} - ${formatDate(maxDate)}`;
+            return `Estimated delivery by ${formatDate(minDate)} - ${formatDate(maxDate)}`;
         }
     }
 }

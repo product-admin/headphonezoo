@@ -9,26 +9,20 @@ document.addEventListener('DOMContentLoaded', function () {
     initHoverEffects();
     initDynamicNavbarHeight();
     initProductCards();
+    initMobileMenu();
 });
 
 
 // Parallax effects for hero section
 function initParallaxEffects() {
     const heroParticles = document.querySelector('.hero-particles');
-    const ctaParticles = document.querySelector('.cta-particles');
 
-    if (heroParticles || ctaParticles) {
+    if (heroParticles) {
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const parallaxSpeed = 0.5;
 
-            if (heroParticles) {
-                heroParticles.style.transform = `translateY(${scrolled * parallaxSpeed}px)`;
-            }
-
-            if (ctaParticles) {
-                ctaParticles.style.transform = `translateY(${scrolled * -parallaxSpeed}px)`;
-            }
+            heroParticles.style.transform = `translateY(${scrolled * parallaxSpeed}px)`;
         });
     }
 }
@@ -161,58 +155,73 @@ function initDynamicNavbarHeight() {
     setTimeout(setHeight, 250);
 }
 
-// Smooth scrolling for anchor links
-function initSmoothScrolling() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-}
+// Unified smooth scrolling function with precise section-badge centering
+function scrollToSection(sectionId, isHashLink = false) {
+    // If sectionId starts with #, remove it for getElementById
+    const cleanSectionId = sectionId.startsWith('#') ? sectionId.substring(1) : sectionId;
+    const targetElement = document.getElementById(cleanSectionId);
 
-// Custom smooth scrolling function for buttons
-function scrollToSection(sectionId) {
-    const targetElement = document.getElementById(sectionId);
-    if (targetElement) {
-        // Add visual feedback to the clicked button
-        const clickedButton = event.target;
-        clickedButton.style.transform = 'scale(0.95)';
-        clickedButton.style.opacity = '0.8';
+    if (!targetElement) return;
 
-        // Reset button style after a short delay
-        setTimeout(() => {
-            clickedButton.style.transform = '';
-            clickedButton.style.opacity = '';
-        }, 150);
+    // Find section badge if it exists
+    const sectionBadge = targetElement.querySelector('.section-badge');
+    const header = document.querySelector('header');
+    const headerHeight = header ? header.offsetHeight : 0;
+    const windowHeight = window.innerHeight;
 
-        // Calculate the position to center the element on screen
-        const elementRect = targetElement.getBoundingClientRect();
-        const absoluteElementTop = elementRect.top + window.pageYOffset;
-        const middle = absoluteElementTop - (window.innerHeight / 2);
+    // Function to calculate and execute the scroll
+    const executeScroll = (elementToCenter) => {
+        // Get the element's position relative to the viewport
+        const rect = elementToCenter.getBoundingClientRect();
+
+        // Calculate the center position of the viewport
+        const viewportCenter = windowHeight / 2;
+
+        // Calculate the element's center position relative to the viewport
+        const elementCenter = rect.top + (rect.height / 2);
+
+        // Calculate how much we need to scroll to center the element
+        const scrollOffset = elementCenter - viewportCenter;
+
+        // Get current scroll position
+        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Calculate final scroll position
+        const targetScroll = currentScroll + scrollOffset - (headerHeight / 2);
 
         // Smooth scroll to the calculated position
         window.scrollTo({
-            top: middle,
+            top: targetScroll,
             behavior: 'smooth'
         });
+    };
 
-        // Add a subtle highlight effect to the target section
-        setTimeout(() => {
-            targetElement.style.transform = 'scale(1.02)';
-            targetElement.style.transition = 'transform 0.3s ease';
-
-            setTimeout(() => {
-                targetElement.style.transform = '';
-            }, 300);
-        }, 800); // Wait for scroll to complete
+    // If section badge exists, center it, otherwise center the target element
+    if (sectionBadge) {
+        executeScroll(sectionBadge);
+    } else {
+        executeScroll(targetElement);
     }
+
+    // Update URL hash without jumping
+    if (isHashLink) {
+        history.pushState(null, null, `#${cleanSectionId}`);
+    }
+}
+
+// Initialize smooth scrolling for anchor links
+function initSmoothScrolling() {
+    document.addEventListener('click', function (e) {
+        // Check if the clicked element is an anchor with a hash href
+        const anchor = e.target.closest('a[href^="#"]');
+        if (!anchor) return;
+
+        const targetId = anchor.getAttribute('href');
+        if (targetId === '#') return;
+
+        e.preventDefault();
+        scrollToSection(targetId, true);
+    });
 }
 
 
@@ -387,3 +396,56 @@ function initProductCards() {
 window.addEventListener('load', function () {
     document.body.classList.add('loaded');
 });
+
+// Mobile Menu Functionality
+function initMobileMenu() {
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+    const mobileMenuContent = document.querySelector('.mobile-menu-content');
+    const mobileNavMenu = document.querySelector('.mobile-nav-menu');
+
+    if (mobileMenuToggle && mobileMenuOverlay) {
+        mobileMenuToggle.addEventListener('click', function () {
+            mobileMenuToggle.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            document.body.classList.add('menu-open');
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Close menu when clicking anywhere outside the mobile-nav-menu
+        mobileMenuOverlay.addEventListener('click', function (e) {
+            // Check if click is outside mobile-nav-menu (including links inside it)
+            if (mobileNavMenu && !mobileNavMenu.contains(e.target)) {
+                closeMobileMenu();
+            }
+        });
+    }
+}
+
+function closeMobileMenu() {
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+    if (mobileMenuToggle && mobileMenuOverlay) {
+        mobileMenuToggle.classList.remove('active');
+        mobileMenuOverlay.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        document.body.style.overflow = '';
+    }
+}
+
+// Navigation Click Handlers
+function handleNavClick(event, sectionId) {
+    event.preventDefault();
+    closeMobileMenu();
+    scrollToSection(sectionId, true);
+}
+
+function handleMobileNavClick(event, sectionId) {
+    event.preventDefault();
+    closeMobileMenu();
+    // Small delay to allow menu to close before scrolling
+    setTimeout(() => {
+        scrollToSection(sectionId, true);
+    }, 100); // Reduced delay for better UX
+}
