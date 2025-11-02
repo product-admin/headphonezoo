@@ -279,8 +279,9 @@
                             <ion-icon name="chevron-down"></ion-icon>
                         </button>
                         <div class="currency-menu" id="currencyMenu">
-                            <a href="" class="currency-option">Singapore (SGD)</a>
-                            <a href="" class="currency-option">Australia (AUD)</a>
+                            <a href="#" class="currency-option" data-currency="SGD">Singapore (SGD)</a>
+                            <a href="#" class="currency-option" data-currency="AUD">Australia (AUD)</a>
+                            <a href="#" class="currency-option" data-currency="IDR">Indonesia (IDR)</a>
                         </div>
                     </div>
                 </div>
@@ -309,8 +310,9 @@
                         <ion-icon name="chevron-down"></ion-icon>
                     </button>
                     <div class="mobile-currency-menu" id="mobileCurrencyMenu">
-                        <a href="" class="mobile-currency-option">Singapore Dollar (SGD)</a>
-                        <a href="" class="mobile-currency-option">Australia Dollar (AUD)</a>
+                        <a href="#" class="mobile-currency-option" data-currency="SGD">Singapore Dollar (SGD)</a>
+                        <a href="#" class="mobile-currency-option" data-currency="AUD">Australia Dollar (AUD)</a>
+                        <a href="#" class="mobile-currency-option" data-currency="IDR">Indonesia Rupiah (IDR)</a>
                     </div>
                 </div>
             </li>
@@ -354,7 +356,7 @@
 
 
 
-    <main class="container">
+    <main id="website-front-page-container" class="container">
         <section class="hero">
             <div class="hero-content">
                 <div class="product-images">
@@ -463,7 +465,7 @@
                         </div>
                         <div class="currency-availability animate-on-scroll from-bottom">
                             <ion-icon name="globe"></ion-icon>
-                            <span>Available in SGD & AUD</span>
+                            <span>Available in SGD & AUD & IDR</span>
                         </div>
                     </div>
 
@@ -481,7 +483,6 @@
                             <label for="colorSelect">Choose Color:</label>
                             <select id="colorSelect" class="color-dropdown">
                                 <option value="black">Black</option>
-                                <option value="white">White</option>
                             </select>
                         </div>
                     </div>
@@ -686,9 +687,6 @@
 
 
 
-
-
-        <!-- General Asked Questions Section -->
         <section class="faq" id="faq">
             <h2 class="section-title animate-on-scroll from-right">General Questions</h2>
             <div class="faq-list">
@@ -713,15 +711,6 @@
                 </div>
                 <div class="faq-item">
                     <div class="faq-question">
-                        is this headphone compatible with iPhone? <ion-icon name="chevron-down"></ion-icon>
-                    </div>
-                    <div class="faq-answer">
-                        Sure, this headphone is compatible with all Bluetooth-enabled devices, including iPhones,
-                        Android phones, tablets, and computers.
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">
                         Why should I buy this headphone from you? <ion-icon name="chevron-down"></ion-icon>
                     </div>
                     <div class="faq-answer">
@@ -739,6 +728,14 @@
                         Apple AirPods are popular, but they come with a premium price. The P47 Headphones deliver
                         clear sound, strong bass, and comfortable design at a fraction of the cost. They’re perfect if
                         you want reliable audio performance without paying extra for the Apple brand name.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Are you the owner of this product? <ion-icon name="chevron-down"></ion-icon>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We partner with trusted global retailers like Amazon, Temu, Shopee.. to source authentic products. While we don't manufacture these headphones, we carefully select and verify all our suppliers to ensure you receive genuine products with reliable warranties and support.</p>
                     </div>
                 </div>
             </div>
@@ -765,10 +762,7 @@
                             rel="noopener noreferrer">Terms of Service</a></li>
                     <li><a href="mailto:support@headphonezoo.com">Contact Us</a></li>
                 </ul>
-                <div class="copyright">support@headphonezoo.com</div>
-                <div class="copyright">my.github.websites@gmail.com</div>
-                <div class="copyright">+62 822-1008-1028</div>
-                <div class="copyright">HeadphoneZoo Store 2025 | All Rights Reserved ©.</div>
+                <div class="copyright">HeadphoneZoo Store 2025 © | All Rights Reserved.</div>
             </div>
         </div>
     </footer>

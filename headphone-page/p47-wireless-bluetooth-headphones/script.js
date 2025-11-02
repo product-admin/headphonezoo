@@ -190,11 +190,6 @@ const colorVariants = {
         ],
         available: true
     },
-    white: {
-        images: [
-        ],
-        available: false // White color is sold out
-    },
 };
 
 // Function to show color availability notification
@@ -860,101 +855,6 @@ class ScrollAnimator {
 
 
 
-
-/**
- * Debug function to log information to console
- */
-function debugLog(message, data = null) {
-    console.log(`[Checkout Debug] ${message}`, data || '');
-}
-
-
-/**
- * Standalone Buy Now handler - No WordPress dependencies
- * This version works without loading external WordPress scripts
- */
-function handleBuyClickStandalone() {
-    debugLog('Standalone handler: Button clicked, starting direct redirect');
-
-    const color = document.getElementById('colorSelect')?.value || '';
-    const ctaBtn = document.querySelector('.cta-button');
-    const stickyBtn = document.getElementById('stickyBuyNowBtn');
-    const activeBtn = (ctaBtn && ctaBtn.matches(':hover')) ? ctaBtn : stickyBtn;
-
-    debugLog('Standalone handler: Selected color:', color);
-    debugLog('Standalone handler: Active button:', activeBtn?.className);
-
-    // Get current currency and set corresponding checkout URL and product ID
-    const currentCurrency = window.currencyManager?.getCurrentCurrency() || 'SGD';
-    const checkoutUrls = {
-        SGD: 'https://sg-checkout.headphonezoo.com/',
-        AUD: 'https://au-checkout.headphonezoo.com/'
-    };
-    const productIds = {
-        SGD: '3009',
-        AUD: '3067'
-    };
-
-    const checkoutUrl = checkoutUrls[currentCurrency] || checkoutUrls.SGD;
-    const productId = productIds[currentCurrency] || productIds.SGD;
-
-    debugLog('Standalone handler: Current currency:', currentCurrency);
-    debugLog('Standalone handler: Checkout URL:', checkoutUrl);
-    debugLog('Standalone handler: Product ID:', productId);
-
-    // Record click for analytics
-    if (typeof insertNewClick === 'function') {
-        insertNewClick(productId).catch(console.error);
-    }
-
-    if (activeBtn) {
-        activeBtn.disabled = true;
-        activeBtn.textContent = "Redirecting...";
-    }
-
-    // Direct redirect using form submission (most reliable method)
-    debugLog('Standalone handler: Creating redirect form...');
-    setTimeout(() => {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = checkoutUrl;
-
-        // Add hidden fields to add product to cart
-        const productField = document.createElement('input');
-        productField.type = 'hidden';
-        productField.name = 'add-to-cart';
-        productField.value = productId;
-
-        const quantityField = document.createElement('input');
-        quantityField.type = 'hidden';
-        quantityField.name = 'quantity';
-        quantityField.value = '1';
-
-        // Add color if selected
-        if (color) {
-            const colorField = document.createElement('input');
-            colorField.type = 'hidden';
-            colorField.name = 'selected_color';
-            colorField.value = color;
-            form.appendChild(colorField);
-        }
-
-        form.appendChild(productField);
-        form.appendChild(quantityField);
-        document.body.appendChild(form);
-
-        debugLog('Standalone handler: Submitting form...');
-        form.submit();
-
-        // Cleanup after submission
-        setTimeout(() => {
-            if (document.body.contains(form)) {
-                document.body.removeChild(form);
-            }
-        }, 1000);
-    }, 300);
-}
-
 /**
  * Currency Dropdown Functionality
  */
@@ -1041,10 +941,116 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-
-
-
-
     document.querySelector('.cta-button')?.addEventListener('click', handleBuyClickStandalone);
     document.getElementById('stickyBuyNowBtn')?.addEventListener('click', handleBuyClickStandalone);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Standalone Buy Now handler — uses force-single-add.php in WP root.
+ * - Empties cart server-side, adds exactly 1 item, then redirects to checkout.
+ * - Passes color as attribute_pa_color (WooCommerce format).
+ */
+function handleBuyClickStandalone() {
+  // small helper for debugging (no-op if debugLog not defined)
+  function dlog(...args) { try { (typeof debugLog === 'function' ? debugLog : console.log).apply(null, args); } catch(e){ console.log(...args); } }
+
+  dlog('Standalone handler: Button clicked');
+
+  const color = document.getElementById('colorSelect')?.value || '';
+  const ctaBtn = document.querySelector('.cta-button');
+  const stickyBtn = document.getElementById('stickyBuyNowBtn');
+
+  // choose an "active" button to disable for UX (prefer hovered CTA)
+  const activeBtn = (ctaBtn && ctaBtn.matches(':hover')) ? ctaBtn : (ctaBtn || stickyBtn);
+
+  // Currency-aware config (you already had this)
+  const currentCurrency = window.currencyManager?.getCurrentCurrency?.() || 'SGD';
+  const checkoutOrigins = {
+    SGD: 'https://sg-checkout.headphonezoo.com',
+    AUD: 'https://au-checkout.headphonezoo.com',
+    IDR: 'https://id-checkout.headphonezoo.com'
+  };
+  const productIds = {
+    SGD: '3009',
+    AUD: '3067',
+    IDR: '3113'
+  };
+
+  const origin = checkoutOrigins[currentCurrency] || checkoutOrigins.SGD;
+  const productId = productIds[currentCurrency] || productIds.SGD;
+
+  dlog('Standalone handler: currency=', currentCurrency, 'productId=', productId, 'origin=', origin, 'color=', color);
+
+  // record click (non-blocking)
+  if (typeof insertNewClick === 'function') {
+    try { insertNewClick(productId).catch(err => dlog('insertNewClick error', err)); } catch(e){ dlog('insertNewClick threw', e); }
+  }
+
+  // disable button to prevent spam clicks
+  if (activeBtn) {
+    activeBtn.disabled = true;
+    // preserve original text in data attr so we can restore if needed
+    if (!activeBtn.dataset.origText) activeBtn.dataset.origText = activeBtn.textContent;
+    activeBtn.textContent = "Redirecting...";
+  }
+
+  // Build URL to force-single-add.php in WP root (use origin + file)
+  const forceFile = '/force-single-add.php';
+  let forceUrl;
+  try {
+    forceUrl = new URL(forceFile, origin).toString();
+  } catch (e) {
+    // fallback: if origin invalid, try simple concatenation
+    forceUrl = origin.replace(/\/$/, '') + forceFile;
+  }
+
+  // Build query params (product + optional attribute + cache-buster)
+  const params = new URLSearchParams();
+  params.set('product', String(productId));
+  params.set('t', String(Date.now())); // cache buster
+
+  // If color present, send as WooCommerce attribute param (attribute_pa_<slug>)
+  // Replace 'color' slug if your attribute slug is different
+  if (color) {
+    params.set('attribute_pa_color', color);
+  }
+
+  const finalUrl = `${forceUrl}?${params.toString()}`;
+
+  dlog('Standalone handler: finalUrl=', finalUrl);
+
+  // Navigate to WP endpoint in same tab (recommended). Use window.open(...) if you want new tab.
+  try {
+    window.location.href = finalUrl;
+  } catch (err) {
+    dlog('Navigation failed, falling back to direct checkout add-to-cart', err);
+
+    // restore button text briefly
+    if (activeBtn) {
+      setTimeout(()=> {
+        activeBtn.disabled = false;
+        activeBtn.textContent = activeBtn.dataset.origText || 'Get One Now';
+      }, 1500);
+    }
+
+    // fallback: open standard checkout add-to-cart (may increment qty)
+    const fallback = origin.replace(/\/$/, '') + `/checkout/?add-to-cart=${encodeURIComponent(productId)}&quantity=1&t=${Date.now()}`;
+    window.location.href = fallback;
+  }
+}

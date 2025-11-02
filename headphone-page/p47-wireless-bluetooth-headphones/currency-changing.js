@@ -2,12 +2,11 @@
    CURRENCY CHANGING FUNCTIONALITY
    ============================================
    
-   This file handles currency changes between SGD and AUD.
-   - Updates prices with fixed values for each currency:
-     * SGD: $31.87 → $19.12
-     * AUD: $36.87 → $24.12
-   - Updates delivery date range (7-9 days for SGD, 7-12 days for AUD)
-   - Updates shipping answer in FAQ (7-9 days for SGD, 7-12 days for AUD)
+   This file handles currency changes between different currencies.
+   - Centralized currency configuration for easy management
+   - Updates prices with fixed values for each currency
+   - Updates delivery date range based on currency
+   - Updates shipping answer in FAQ
    - Triggers DynamicNumbers with currency-specific storage
    - Prevents duplicate number changes on repeated clicks
    - Closes mobile navigation after currency selection
@@ -19,6 +18,42 @@
 class CurrencyManager {
     constructor() {
         this.storageKey = 'currencyData';
+        this.currencies = {
+            'SGD': {
+                name: 'Singapore Dollar',
+                code: 'SGD',
+                symbol: '$',
+                displayName: 'Singapore',
+                oldPrice: 31.87,
+                newPrice: 19.12,
+                discount: 40,
+                deliveryRange: '7-9',
+                displayFormat: (price) => `${this.currencies.SGD.symbol}${price.toFixed(2)}`
+            },
+            'AUD': {
+                name: 'Australian Dollar',
+                code: 'AUD',
+                symbol: '$',
+                displayName: 'Australia',
+                oldPrice: 36.87,
+                newPrice: 24.12,
+                discount: 40,
+                deliveryRange: '7-12',
+                displayFormat: (price) => `${this.currencies.AUD.symbol}${price.toFixed(2)}`
+            },
+            'IDR': {
+                name: 'Indonesian Rupiah',
+                code: 'IDR',
+                symbol: 'Rp',
+                displayName: 'Indonesia',
+                oldPrice: 98000,
+                newPrice: 74120,
+                discount: 24,
+                deliveryRange: '4-8',
+                displayFormat: (price) => `Rp${price.toLocaleString('id-ID')}`
+            }
+        };
+        
         this.currentCurrency = this.getStoredCurrency() || 'SGD';
         this.init();
     }
@@ -64,11 +99,9 @@ class CurrencyManager {
                 const option = e.target.closest('.currency-option');
                 if (option) {
                     e.preventDefault();
-                    const text = option.textContent.trim();
-                    if (text.includes('Australia') || text.includes('AUD')) {
-                        this.handleCurrencyChange('AUD');
-                    } else if (text.includes('Singapore') || text.includes('SGD')) {
-                        this.handleCurrencyChange('SGD');
+                    const currencyCode = option.getAttribute('data-currency');
+                    if (currencyCode && this.currencies[currencyCode]) {
+                        this.handleCurrencyChange(currencyCode);
                     }
                 }
             });
@@ -81,35 +114,60 @@ class CurrencyManager {
                 const option = e.target.closest('.mobile-currency-option');
                 if (option) {
                     e.preventDefault();
-                    const text = option.textContent.trim();
-                    if (text.includes('Australia') || text.includes('AUD')) {
-                        this.handleCurrencyChange('AUD');
-                    } else if (text.includes('Singapore') || text.includes('SGD')) {
-                        this.handleCurrencyChange('SGD');
+                    const currencyCode = option.getAttribute('data-currency');
+                    if (currencyCode && this.currencies[currencyCode]) {
+                        this.handleCurrencyChange(currencyCode);
                     }
                 }
             });
         }
     }
 
-    handleCurrencyChange(newCurrency) {
+    async handleCurrencyChange(newCurrency) {
         // Check if currency is actually changing
         if (this.currentCurrency === newCurrency) {
             return; // Already on this currency, do nothing
         }
 
+        // Get the main container and mobile nav
+        const container = document.getElementById('website-front-page-container');
+        const mobileNav = document.getElementById('mobileNav');
+        
+        // Start fade out animation and hide mobile nav
+        if (container) {
+            container.classList.remove('fade-in');
+            container.classList.add('fade-out');
+            
+            // Close mobile nav immediately when starting fade out
+            if (mobileNav) {
+                mobileNav.classList.remove('open');
+                document.body.style.overflow = 'auto';
+                const overlay = document.getElementById('overlay');
+                if (overlay) overlay.classList.remove('active');
+            }
+        }
+
+        // Wait for fade out to complete (1 second)
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Change the currency
         this.currentCurrency = newCurrency;
         this.storeCurrency(newCurrency);
         this.applyCurrencySettings(newCurrency);
 
-        // Close dropdowns
+        // Close dropdowns (already handled mobile nav)
         this.closeDropdowns();
-
-        // Close mobile navigation if open
-        this.closeMobileNav();
 
         // Show success notification
         this.showCurrencyChangeNotification(newCurrency);
+
+        // Start fade in animation
+        if (container) {
+            // Force reflow to ensure the browser registers the class change
+            void container.offsetHeight;
+            container.classList.remove('fade-out');
+            container.classList.add('fade-in');
+        }
     }
 
     closeDropdowns() {
@@ -142,12 +200,11 @@ class CurrencyManager {
     }
 
     showCurrencyChangeNotification(currency) {
-        // Get short currency name
-        const currencyNames = {
-            SGD: 'SGD',
-            AUD: 'AUD'
-        };
-        const currencyName = currencyNames[currency] || currency;
+        // Get currency name from configuration
+        const currencyData = this.currencies[currency];
+        if (!currencyData) return;
+        
+        const currencyName = currencyData.name;
 
         // Create notification element
         const notification = document.createElement('div');
@@ -250,24 +307,15 @@ class CurrencyManager {
         const oldPriceElement = document.querySelector('.old-price');
         const newPriceElement = document.querySelector('.new-price');
         const currentCurrencyElement = document.querySelector('.current-currency');
+        const discountBadge = document.querySelector('.discount-badge');
 
-        // Define specific prices for each currency
-        const prices = {
-            SGD: {
-                oldPrice: 31.87,
-                newPrice: 19.12
-            },
-            AUD: {
-                oldPrice: 36.87,
-                newPrice: 24.12
-            }
-        };
+        const currencyData = this.currencies[currency];
+        if (!currencyData) return;
 
-        const currencyPrices = prices[currency];
-
-        if (oldPriceElement) oldPriceElement.textContent = `$${currencyPrices.oldPrice.toFixed(2)}`;
-        if (newPriceElement) newPriceElement.textContent = `$${currencyPrices.newPrice.toFixed(2)}`;
-        if (currentCurrencyElement) currentCurrencyElement.textContent = currency;
+        if (oldPriceElement) oldPriceElement.textContent = currencyData.displayFormat(currencyData.oldPrice);
+        if (newPriceElement) newPriceElement.textContent = currencyData.displayFormat(currencyData.newPrice);
+        if (currentCurrencyElement) currentCurrencyElement.textContent = currencyData.code;
+        if (discountBadge) discountBadge.textContent = `${currencyData.discount}% OFF`;
 
         // Update sticky bar prices
         this.updateStickyBarPrices(currency);
@@ -297,8 +345,11 @@ class CurrencyManager {
         const deliveryTextElement = document.querySelector('#deliveryText');
         if (!deliveryTextElement) return;
 
-        // Determine delivery range based on currency
-        const deliveryRange = currency === 'AUD' ? '7-12 Days' : '7-9 Days';
+        const currencyData = this.currencies[currency];
+        if (!currencyData) return;
+
+        // Get delivery range from currency data
+        const deliveryRange = `${currencyData.deliveryRange} Days`;
 
         // Recalculate delivery dates
         const [minDays, maxDays] = this.extractDays(deliveryRange);
@@ -349,14 +400,17 @@ class CurrencyManager {
         // Update currency selector button text
         const currencyTrigger = document.getElementById('currencyTrigger');
         const mobileCurrencyTrigger = document.getElementById('mobileCurrencyTrigger');
+        const currencyData = this.currencies[currency];
+        
+        if (!currencyData) return;
 
         if (currencyTrigger) {
-            currencyTrigger.querySelector('span').textContent = currency === 'AUD' ? 'Australia' : 'Singapore';
+            currencyTrigger.querySelector('span').textContent = currencyData.displayName;
         }
 
         if (mobileCurrencyTrigger) {
-            mobileCurrencyTrigger.querySelector('span').textContent =
-                currency === 'AUD' ? 'Australia Dollar (AUD)' : 'Singapore Dollar (SGD)';
+            mobileCurrencyTrigger.querySelector('span').textContent = 
+                `${currencyData.name} (${currencyData.code})`;
         }
     }
 
@@ -461,13 +515,16 @@ class CurrencyManager {
         const shippingAnswer = document.getElementById('shippingAnswer');
         if (!shippingAnswer) return;
 
-        // Define shipping time based on currency
-        const shippingTimes = {
-            SGD: '7-9 business days',
-            AUD: '7-12 business days'
-        };
+        // Get the currency data
+        const currencyData = this.currencies[currency];
+        if (!currencyData) return;
 
-        const shippingTime = shippingTimes[currency] || shippingTimes.SGD;
+        // Get the delivery range from currency data and format it
+        const [minDays, maxDays] = this.extractDays(currencyData.deliveryRange);
+        const shippingTime = minDays === maxDays 
+            ? `${minDays} business days` 
+            : `${minDays}-${maxDays} business days`;
+
         shippingAnswer.textContent = `We offer free standard shipping which typically takes ${shippingTime}.`;
     }
 
