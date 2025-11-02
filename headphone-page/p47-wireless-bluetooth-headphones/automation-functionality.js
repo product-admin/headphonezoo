@@ -59,7 +59,7 @@ class DynamicNumbers {
         
         // Generate numbers based on the period key - this will be the same for all users in the same period
         const numbers = {
-            lowStock: this.generateSeededRandom(periodKey + 'low', 5, 15),
+            lowStock: this.generateSeededRandom(periodKey + 'low', 20, 70),
             reviews: this.generateSeededRandom(periodKey + 'reviews', 90, 195),
             sales: this.generateSeededRandom(periodKey + 'sales', 40, 180)
         };
