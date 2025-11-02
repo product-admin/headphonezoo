@@ -17,38 +17,11 @@
 // Dynamic Numbers System - Updates every 4 days
 class DynamicNumbers {
     constructor() {
-        this.storageKey = 'dynamicNumbersData';
-        this.updateInterval = 4 * 24 * 60 * 60 * 1000; // 4 days in milliseconds
         this.init();
     }
 
     init() {
-        const storedData = this.getStoredData();
-        const now = Date.now();
-
-        // Check if we need to update numbers
-        if (!storedData || (now - storedData.lastUpdate) >= this.updateInterval) {
-            this.updateNumbers();
-        } else {
-            this.applyStoredNumbers(storedData);
-        }
-    }
-
-    getStoredData() {
-        try {
-            const stored = localStorage.getItem(this.storageKey);
-            return stored ? JSON.parse(stored) : null;
-        } catch (e) {
-            return null;
-        }
-    }
-
-    storeData(data) {
-        try {
-            localStorage.setItem(this.storageKey, JSON.stringify(data));
-        } catch (e) {
-            console.warn('Could not store dynamic numbers data');
-        }
+        this.updateNumbers();
     }
 
     // Generate a consistent random number based on date and a seed
@@ -68,46 +41,32 @@ class DynamicNumbers {
 
     // Get current period key (changes every 4 days)
     getCurrentPeriodKey() {
+        // Use a fixed date string (YYYY-MM-DD) for consistent timezone handling
         const now = new Date();
-        // Calculate days since epoch and divide by 4, then floor to get the period
-        const daysSinceEpoch = Math.floor(now / (1000 * 60 * 60 * 24));
-        const period = Math.floor(daysSinceEpoch / 4); // Change every 4 days
+        const dateStr = now.toISOString().split('T')[0]; // Gets YYYY-MM-DD in UTC
+        
+        // Calculate days since a fixed date (e.g., 2020-01-01) and divide by 4
+        const fixedDate = new Date('2020-01-01T00:00:00Z');
+        const diffTime = now - fixedDate;
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        const period = Math.floor(diffDays / 4); // Change every 4 days
+        
         return `period_${period}`;
     }
 
     updateNumbers() {
         const periodKey = this.getCurrentPeriodKey();
-        const storedData = this.getStoredData();
         
-        // Check if we have stored data for the current period
-        if (storedData && storedData.periodKey === periodKey) {
-            this.applyStoredNumbers(storedData);
-            return;
-        }
-
-        // Generate new numbers for this period
+        // Generate numbers based on the period key - this will be the same for all users in the same period
         const numbers = {
-            periodKey: periodKey,
             lowStock: this.generateSeededRandom(periodKey + 'low', 5, 15),
             reviews: this.generateSeededRandom(periodKey + 'reviews', 90, 195),
-            sales: this.generateSeededRandom(periodKey + 'sales', 40, 180),
-            lastUpdate: Date.now()
+            sales: this.generateSeededRandom(periodKey + 'sales', 40, 180)
         };
 
-        this.storeData(numbers);
         this.applyNumbers(numbers);
     }
 
-    applyStoredNumbers(data) {
-        // Only apply if we have valid data
-        if (data && typeof data === 'object') {
-            this.applyNumbers({
-                lowStock: data.lowStock,
-                reviews: data.reviews,
-                sales: data.sales
-            });
-        }
-    }
 
     applyNumbers(numbers) {
         // Update sales number
