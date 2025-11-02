@@ -414,63 +414,47 @@ class CurrencyManager {
         }
     }
 
+    // Generate a consistent random number based on a seed
+    generateSeededRandom(seed, min, max) {
+        // Create a simple hash from the seed
+        let hash = 0;
+        for (let i = 0; i < seed.length; i++) {
+            const char = seed.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        
+        // Use the hash to generate a pseudo-random number between min and max
+        const random = (Math.abs(hash) % 1000000) / 1000000; // 0-1
+        return Math.floor(random * (max - min + 1)) + min;
+    }
+
+    // Get current 4-day period key based on date
+    getCurrentPeriodKey() {
+        // Use a fixed date (Nov 2, 2025) as reference
+        const referenceDate = new Date('2025-11-02T00:00:00Z');
+        const now = new Date();
+        
+        // Calculate days since reference date
+        const diffTime = now - referenceDate;
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        
+        // Calculate 4-day periods since reference date
+        return Math.floor(diffDays / 4);
+    }
+
     triggerDynamicNumbers(currency) {
-        // Create currency-specific storage key
-        const currencyStorageKey = `dynamicNumbersData_${currency}`;
-        const storedData = this.getStoredNumbers(currencyStorageKey);
-        const now = Date.now();
-        const updateInterval = 4 * 24 * 60 * 60 * 1000; // 4 days
-
-        // Check if we need to update numbers for this currency
-        if (!storedData || (now - storedData.lastUpdate) >= updateInterval) {
-            this.updateNumbersForCurrency(currency, currencyStorageKey);
-        } else {
-            this.applyStoredNumbers(storedData);
-        }
-    }
-
-    getStoredNumbers(storageKey) {
-        try {
-            const stored = localStorage.getItem(storageKey);
-            return stored ? JSON.parse(stored) : null;
-        } catch (e) {
-            return null;
-        }
-    }
-
-    storeNumbers(storageKey, data) {
-        try {
-            localStorage.setItem(storageKey, JSON.stringify(data));
-        } catch (e) {
-            console.warn('Could not store dynamic numbers data');
-        }
-    }
-
-    generateRandomNumber(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    updateNumbersForCurrency(currency, storageKey) {
+        const periodKey = this.getCurrentPeriodKey();
+        
+        // Generate consistent numbers based on period and currency
         const numbers = {
-            lowStock: this.generateRandomNumber(5, 15),
-            reviews: this.generateRandomNumber(90, 195),
-            sales: this.generateRandomNumber(40, 180),
-            lastUpdate: Date.now()
+            lowStock: this.generateSeededRandom(`period_${periodKey}_${currency}_low`, 5, 15),
+            reviews: this.generateSeededRandom(`period_${periodKey}_${currency}_reviews`, 90, 195),
+            sales: this.generateSeededRandom(`period_${periodKey}_${currency}_sales`, 40, 180)
         };
-
-        this.storeNumbers(storageKey, numbers);
+        
         this.applyNumbers(numbers);
-
-        // Also update the schema review count
         this.updateSchemaReviewCount(numbers.reviews);
-    }
-
-    applyStoredNumbers(data) {
-        this.applyNumbers({
-            lowStock: data.lowStock,
-            reviews: data.reviews,
-            sales: data.sales
-        });
     }
 
     applyNumbers(numbers) {
