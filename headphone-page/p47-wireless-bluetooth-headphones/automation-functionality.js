@@ -51,15 +51,46 @@ class DynamicNumbers {
         }
     }
 
-    generateRandomNumber(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+    // Generate a consistent random number based on date and a seed
+    generateSeededRandom(seed, min, max) {
+        // Create a simple hash from the seed
+        let hash = 0;
+        for (let i = 0; i < seed.length; i++) {
+            const char = seed.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        
+        // Use the hash to generate a pseudo-random number between min and max
+        const random = (Math.abs(hash) % 1000000) / 1000000; // 0-1
+        return Math.floor(random * (max - min + 1)) + min;
+    }
+
+    // Get current period key (changes every 4 days)
+    getCurrentPeriodKey() {
+        const now = new Date();
+        // Calculate days since epoch and divide by 4, then floor to get the period
+        const daysSinceEpoch = Math.floor(now / (1000 * 60 * 60 * 24));
+        const period = Math.floor(daysSinceEpoch / 4); // Change every 4 days
+        return `period_${period}`;
     }
 
     updateNumbers() {
+        const periodKey = this.getCurrentPeriodKey();
+        const storedData = this.getStoredData();
+        
+        // Check if we have stored data for the current period
+        if (storedData && storedData.periodKey === periodKey) {
+            this.applyStoredNumbers(storedData);
+            return;
+        }
+
+        // Generate new numbers for this period
         const numbers = {
-            lowStock: this.generateRandomNumber(5, 15),
-            reviews: this.generateRandomNumber(90, 195),
-            sales: this.generateRandomNumber(40, 180),
+            periodKey: periodKey,
+            lowStock: this.generateSeededRandom(periodKey + 'low', 5, 15),
+            reviews: this.generateSeededRandom(periodKey + 'reviews', 90, 195),
+            sales: this.generateSeededRandom(periodKey + 'sales', 40, 180),
             lastUpdate: Date.now()
         };
 
@@ -68,11 +99,14 @@ class DynamicNumbers {
     }
 
     applyStoredNumbers(data) {
-        this.applyNumbers({
-            lowStock: data.lowStock,
-            reviews: data.reviews,
-            sales: data.sales
-        });
+        // Only apply if we have valid data
+        if (data && typeof data === 'object') {
+            this.applyNumbers({
+                lowStock: data.lowStock,
+                reviews: data.reviews,
+                sales: data.sales
+            });
+        }
     }
 
     applyNumbers(numbers) {
