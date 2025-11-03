@@ -50,10 +50,10 @@ class CurrencyManager {
                 newPrice: 54120,
                 discount: 63,
                 deliveryRange: '4-8',
-                displayFormat: (price) => `Rp${price.toLocaleString('id-ID')}`
+                displayFormat: (price) => `${price.toLocaleString('en-US')}`
             }
         };
-        
+
         this.currentCurrency = this.getStoredCurrency() || 'SGD';
         this.init();
     }
@@ -132,12 +132,12 @@ class CurrencyManager {
         // Get the main container and mobile nav
         const container = document.getElementById('website-front-page-container');
         const mobileNav = document.getElementById('mobileNav');
-        
+
         // Start fade out animation and hide mobile nav
         if (container) {
             container.classList.remove('fade-in');
             container.classList.add('fade-out');
-            
+
             // Close mobile nav immediately when starting fade out
             if (mobileNav) {
                 mobileNav.classList.remove('open');
@@ -203,7 +203,7 @@ class CurrencyManager {
         // Get currency name from configuration
         const currencyData = this.currencies[currency];
         if (!currencyData) return;
-        
+
         const currencyName = currencyData.name;
 
         // Create notification element
@@ -401,7 +401,7 @@ class CurrencyManager {
         const currencyTrigger = document.getElementById('currencyTrigger');
         const mobileCurrencyTrigger = document.getElementById('mobileCurrencyTrigger');
         const currencyData = this.currencies[currency];
-        
+
         if (!currencyData) return;
 
         if (currencyTrigger) {
@@ -409,7 +409,7 @@ class CurrencyManager {
         }
 
         if (mobileCurrencyTrigger) {
-            mobileCurrencyTrigger.querySelector('span').textContent = 
+            mobileCurrencyTrigger.querySelector('span').textContent =
                 `${currencyData.name} (${currencyData.code})`;
         }
     }
@@ -423,7 +423,7 @@ class CurrencyManager {
             hash = ((hash << 5) - hash) + char;
             hash = hash & hash; // Convert to 32bit integer
         }
-        
+
         // Use the hash to generate a pseudo-random number between min and max
         const random = (Math.abs(hash) % 1000000) / 1000000; // 0-1
         return Math.floor(random * (max - min + 1)) + min;
@@ -434,25 +434,25 @@ class CurrencyManager {
         // Use a fixed date (Nov 2, 2025) as reference
         const referenceDate = new Date('2025-11-02T00:00:00Z');
         const now = new Date();
-        
+
         // Calculate days since reference date
         const diffTime = now - referenceDate;
         const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-        
+
         // Calculate 4-day periods since reference date
         return Math.floor(diffDays / 4);
     }
 
     triggerDynamicNumbers(currency) {
         const periodKey = this.getCurrentPeriodKey();
-        
+
         // Generate consistent numbers based on period and currency
         const numbers = {
             lowStock: this.generateSeededRandom(`period_${periodKey}_${currency}_low`, 5, 15),
             reviews: this.generateSeededRandom(`period_${periodKey}_${currency}_reviews`, 90, 195),
             sales: this.generateSeededRandom(`period_${periodKey}_${currency}_sales`, 40, 180)
         };
-        
+
         this.applyNumbers(numbers);
         this.updateSchemaReviewCount(numbers.reviews);
     }
@@ -505,8 +505,8 @@ class CurrencyManager {
 
         // Get the delivery range from currency data and format it
         const [minDays, maxDays] = this.extractDays(currencyData.deliveryRange);
-        const shippingTime = minDays === maxDays 
-            ? `${minDays} business days` 
+        const shippingTime = minDays === maxDays
+            ? `${minDays} business days`
             : `${minDays}-${maxDays} business days`;
 
         shippingAnswer.textContent = `We offer free standard shipping which typically takes ${shippingTime}.`;
