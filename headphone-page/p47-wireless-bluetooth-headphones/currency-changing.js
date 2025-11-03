@@ -24,9 +24,9 @@ class CurrencyManager {
                 code: 'SGD',
                 symbol: '$',
                 displayName: 'Singapore',
-                oldPrice: 31.87,
+                oldPrice: 33.89,
                 newPrice: 19.12,
-                discount: 40,
+                discount: 42,
                 deliveryRange: '7-9',
                 displayFormat: (price) => `${this.currencies.SGD.symbol}${price.toFixed(2)}`
             },
@@ -35,9 +35,9 @@ class CurrencyManager {
                 code: 'AUD',
                 symbol: '$',
                 displayName: 'Australia',
-                oldPrice: 36.87,
-                newPrice: 24.12,
-                discount: 40,
+                oldPrice: 50.28,
+                newPrice: 21.12,
+                discount: 58,
                 deliveryRange: '7-12',
                 displayFormat: (price) => `${this.currencies.AUD.symbol}${price.toFixed(2)}`
             },
@@ -46,9 +46,9 @@ class CurrencyManager {
                 code: 'IDR',
                 symbol: 'Rp',
                 displayName: 'Indonesia',
-                oldPrice: 98000,
-                newPrice: 74120,
-                discount: 24,
+                oldPrice: 78000,
+                newPrice: 54120,
+                discount: 63,
                 deliveryRange: '4-8',
                 displayFormat: (price) => `Rp${price.toLocaleString('id-ID')}`
             }
