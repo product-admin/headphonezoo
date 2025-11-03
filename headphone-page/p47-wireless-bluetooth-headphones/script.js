@@ -943,6 +943,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelector('.cta-button')?.addEventListener('click', handleBuyClickStandalone);
     document.getElementById('stickyBuyNowBtn')?.addEventListener('click', handleBuyClickStandalone);
+    document.getElementById('mobile-sticky-btn')?.addEventListener('click', handleBuyClickStandalone);
 });
 
 
@@ -967,90 +968,91 @@ document.addEventListener('DOMContentLoaded', function () {
  * - Passes color as attribute_pa_color (WooCommerce format).
  */
 function handleBuyClickStandalone() {
-  // small helper for debugging (no-op if debugLog not defined)
-  function dlog(...args) { try { (typeof debugLog === 'function' ? debugLog : console.log).apply(null, args); } catch(e){ console.log(...args); } }
+    // small helper for debugging (no-op if debugLog not defined)
+    function dlog(...args) { try { (typeof debugLog === 'function' ? debugLog : console.log).apply(null, args); } catch (e) { console.log(...args); } }
 
-  dlog('Standalone handler: Button clicked');
+    dlog('Standalone handler: Button clicked');
 
-  const color = document.getElementById('colorSelect')?.value || '';
-  const ctaBtn = document.querySelector('.cta-button');
-  const stickyBtn = document.getElementById('stickyBuyNowBtn');
+    const color = document.getElementById('colorSelect')?.value || '';
+    const ctaBtn = document.querySelector('.cta-button');
+    const stickyBtn = document.getElementById('stickyBuyNowBtn');
+    const mobileStickyBtn = document.getElementById('mobile-sticky-btn');
 
-  // choose an "active" button to disable for UX (prefer hovered CTA)
-  const activeBtn = (ctaBtn && ctaBtn.matches(':hover')) ? ctaBtn : (ctaBtn || stickyBtn);
+    // Get all buy buttons that should show "Redirecting..."
+    const allButtons = [ctaBtn, stickyBtn, mobileStickyBtn].filter(btn => btn !== null && btn !== undefined);
 
-  // Currency-aware config (you already had this)
-  const currentCurrency = window.currencyManager?.getCurrentCurrency?.() || 'SGD';
-  const checkoutOrigins = {
-    SGD: 'https://sg-checkout.headphonezoo.com',
-    AUD: 'https://au-checkout.headphonezoo.com',
-    IDR: 'https://id-checkout.headphonezoo.com'
-  };
-  const productIds = {
-    SGD: '3009',
-    AUD: '3067',
-    IDR: '3113'
-  };
+    // Currency-aware config (you already had this)
+    const currentCurrency = window.currencyManager?.getCurrentCurrency?.() || 'SGD';
+    const checkoutOrigins = {
+        SGD: 'https://sg-checkout.headphonezoo.com',
+        AUD: 'https://au-checkout.headphonezoo.com',
+        IDR: 'https://id-checkout.headphonezoo.com'
+    };
+    const productIds = {
+        SGD: '3009',
+        AUD: '3067',
+        IDR: '3113'
+    };
 
-  const origin = checkoutOrigins[currentCurrency] || checkoutOrigins.SGD;
-  const productId = productIds[currentCurrency] || productIds.SGD;
+    const origin = checkoutOrigins[currentCurrency] || checkoutOrigins.SGD;
+    const productId = productIds[currentCurrency] || productIds.SGD;
 
-  dlog('Standalone handler: currency=', currentCurrency, 'productId=', productId, 'origin=', origin, 'color=', color);
+    dlog('Standalone handler: currency=', currentCurrency, 'productId=', productId, 'origin=', origin, 'color=', color);
 
-  // record click (non-blocking)
-  if (typeof insertNewClick === 'function') {
-    try { insertNewClick(productId).catch(err => dlog('insertNewClick error', err)); } catch(e){ dlog('insertNewClick threw', e); }
-  }
-
-  // disable button to prevent spam clicks
-  if (activeBtn) {
-    activeBtn.disabled = true;
-    // preserve original text in data attr so we can restore if needed
-    if (!activeBtn.dataset.origText) activeBtn.dataset.origText = activeBtn.textContent;
-    activeBtn.textContent = "Redirecting...";
-  }
-
-  // Build URL to force-single-add.php in WP root (use origin + file)
-  const forceFile = '/force-single-add.php';
-  let forceUrl;
-  try {
-    forceUrl = new URL(forceFile, origin).toString();
-  } catch (e) {
-    // fallback: if origin invalid, try simple concatenation
-    forceUrl = origin.replace(/\/$/, '') + forceFile;
-  }
-
-  // Build query params (product + optional attribute + cache-buster)
-  const params = new URLSearchParams();
-  params.set('product', String(productId));
-  params.set('t', String(Date.now())); // cache buster
-
-  // If color present, send as WooCommerce attribute param (attribute_pa_<slug>)
-  // Replace 'color' slug if your attribute slug is different
-  if (color) {
-    params.set('attribute_pa_color', color);
-  }
-
-  const finalUrl = `${forceUrl}?${params.toString()}`;
-
-  dlog('Standalone handler: finalUrl=', finalUrl);
-
-  // Navigate to WP endpoint in same tab (recommended). Use window.open(...) if you want new tab.
-  try {
-    window.location.href = finalUrl;
-  } catch (err) {
-    dlog('Navigation failed, falling back to direct checkout add-to-cart', err);
-
-    // restore button text briefly
-    if (activeBtn) {
-      setTimeout(()=> {
-        activeBtn.disabled = false;
-        activeBtn.textContent = activeBtn.dataset.origText || 'Get One Now';
-      }, 1500);
+    // record click (non-blocking)
+    if (typeof insertNewClick === 'function') {
+        try { insertNewClick(productId).catch(err => dlog('insertNewClick error', err)); } catch (e) { dlog('insertNewClick threw', e); }
     }
 
-    // fallback: open standard checkout add-to-cart (may increment qty)
-    const fallback = origin.replace(/\/$/, '') + `/checkout/?add-to-cart=${encodeURIComponent(productId)}&quantity=1&t=${Date.now()}`;
-    window.location.href = fallback;
-  }
+    // disable all buttons and show "Redirecting..." text to prevent spam clicks
+    allButtons.forEach(btn => {
+        btn.disabled = true;
+        // preserve original text in data attr so we can restore if needed
+        if (!btn.dataset.origText) btn.dataset.origText = btn.textContent;
+        btn.textContent = "Redirecting...";
+    });
+
+    // Build URL to force-single-add.php in WP root (use origin + file)
+    const forceFile = '/force-single-add.php';
+    let forceUrl;
+    try {
+        forceUrl = new URL(forceFile, origin).toString();
+    } catch (e) {
+        // fallback: if origin invalid, try simple concatenation
+        forceUrl = origin.replace(/\/$/, '') + forceFile;
+    }
+
+    // Build query params (product + optional attribute + cache-buster)
+    const params = new URLSearchParams();
+    params.set('product', String(productId));
+    params.set('t', String(Date.now())); // cache buster
+
+    // If color present, send as WooCommerce attribute param (attribute_pa_<slug>)
+    // Replace 'color' slug if your attribute slug is different
+    if (color) {
+        params.set('attribute_pa_color', color);
+    }
+
+    const finalUrl = `${forceUrl}?${params.toString()}`;
+
+    dlog('Standalone handler: finalUrl=', finalUrl);
+
+    // Navigate to WP endpoint in same tab (recommended). Use window.open(...) if you want new tab.
+    try {
+        window.location.href = finalUrl;
+    } catch (err) {
+        dlog('Navigation failed, falling back to direct checkout add-to-cart', err);
+
+        // restore all button texts briefly
+        allButtons.forEach(btn => {
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.textContent = btn.dataset.origText || 'Get One Now';
+            }, 1500);
+        });
+
+        // fallback: open standard checkout add-to-cart (may increment qty)
+        const fallback = origin.replace(/\/$/, '') + `/checkout/?add-to-cart=${encodeURIComponent(productId)}&quantity=1&t=${Date.now()}`;
+        window.location.href = fallback;
+    }
 }
