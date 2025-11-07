@@ -85,7 +85,7 @@ function updateCountdown() {
 
     // Show offer end date in red under timer
     if (offerEndDateSpan) {
-        offerEndDateSpan.textContent = `Offer Ends On: ${endDateString}`;
+        offerEndDateSpan.textContent = `Winter Offer Ends On: ${endDateString}`;
         offerEndDateSpan.style.color = '#e74c3c';
         offerEndDateSpan.style.fontWeight = 'bold';
     }
