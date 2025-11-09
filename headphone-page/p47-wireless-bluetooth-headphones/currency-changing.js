@@ -15,6 +15,7 @@
    
    ============================================ */
 
+
 class CurrencyManager {
     constructor() {
         this.storageKey = 'currencyData';
@@ -28,6 +29,8 @@ class CurrencyManager {
                 newPrice: 19.12,
                 discount: 42,
                 deliveryRange: '7-9',
+                productId: '3009',
+                productName: 'P47_Wireless_Bluetooth_Headphones',
                 displayFormat: (price) => `${this.currencies.SGD.symbol}${price.toFixed(2)}`
             },
             'AUD': {
@@ -39,6 +42,8 @@ class CurrencyManager {
                 newPrice: 21.12,
                 discount: 58,
                 deliveryRange: '7-12',
+                productId: '3067',
+                productName: 'P47_Wireless_Bluetooth_Headphones',
                 displayFormat: (price) => `${this.currencies.AUD.symbol}${price.toFixed(2)}`
             },
             'IDR': {
@@ -50,6 +55,8 @@ class CurrencyManager {
                 newPrice: 54120,
                 discount: 63,
                 deliveryRange: '4-8',
+                productId: '3113',
+                productName: 'P47_Wireless_Bluetooth_Headphones', /* The Name of Column in "all_customers_comments" Supabase Table and folder in "review-images" bucket */
                 displayFormat: (price) => `${price.toLocaleString('en-US')}`
             }
         };
@@ -80,6 +87,16 @@ class CurrencyManager {
 
     getCurrentCurrency() {
         return this.currentCurrency;
+    }
+
+    getCurrentProductId() {
+        const currencyData = this.currencies[this.currentCurrency];
+        return currencyData.productId;
+    }
+
+    getCurrentProductName() {
+        const currencyData = this.currencies[this.currentCurrency];
+        return currencyData.productName;
     }
 
     storeCurrency(currency) {

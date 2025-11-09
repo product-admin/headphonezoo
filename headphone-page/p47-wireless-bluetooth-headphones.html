@@ -261,8 +261,8 @@
             <nav>
                 <div class="brand">
                     <img src="p47-wireless-bluetooth-headphones/headphonezoo.webp"
-                        alt="P47 Wireless Bluetooth Headphones - headphonezoo"
-                        title="P47 Wireless Bluetooth Headphones - headphonezoo" class="brand-logo">
+                        alt="P47 Wireless Bluetooth Headphones - Headphonezoo"
+                        title="P47 Wireless Bluetooth Headphones - Headphonezoo" class="brand-logo">
                     <!-- <div class="logo">P47 Headphone</div> -->
                     <div class="logo">HeadphoneZoo</div>
                 </div>
@@ -655,7 +655,19 @@
 
                         <label for="user_comment_images" class="animate-on-scroll from-left">Add images <span
                                 style="font-weight:400; color:#6b7280;">(Optional, up to 3)</span>:</label>
-                        <input type="file" id="user_comment_images" accept="image/*" multiple />
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="user_comment_images" accept="image/*" multiple />
+                            <label for="user_comment_images" class="file-upload-button">
+                                <ion-icon name="images-outline"></ion-icon>
+                                <span>Choose Images</span>
+                            </label>
+                            <div class="file-upload-info" id="fileUploadInfo" style="display: none;">
+                                <span class="file-count"></span>
+                                <button type="button" class="file-clear-btn" id="fileClearBtn" style="display: none;">
+                                    <ion-icon name="close-circle"></ion-icon> Clear
+                                </button>
+                            </div>
+                        </div>
 
                         <button type="submit" class="animate-on-scroll from-bottom">Submit</button>
                     </form>

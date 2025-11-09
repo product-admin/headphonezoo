@@ -51,6 +51,100 @@ function unmarkVerifiedByName(reviewerName) {
     return true;
 }
 
+// File upload styling and validation
+(function () {
+    const fileInput = document.getElementById('user_comment_images');
+    const fileInfo = document.getElementById('fileUploadInfo');
+    const fileCount = fileInfo?.querySelector('.file-count');
+    const fileClearBtn = document.getElementById('fileClearBtn');
+    const MAX_FILES = 3;
+
+    if (fileInput && fileInfo && fileCount) {
+        // Handle file selection
+        fileInput.addEventListener('change', function (e) {
+            const files = Array.from(e.target.files || []);
+
+            if (files.length > MAX_FILES) {
+                // Limit to 3 files
+                const limitedFiles = files.slice(0, MAX_FILES);
+                const dataTransfer = new DataTransfer();
+                limitedFiles.forEach(file => dataTransfer.items.add(file));
+                fileInput.files = dataTransfer.files;
+
+                // Show notification
+                showFileLimitNotification();
+            }
+
+            updateFileDisplay();
+        });
+
+        // Clear files button
+        if (fileClearBtn) {
+            fileClearBtn.addEventListener('click', function () {
+                fileInput.value = '';
+                updateFileDisplay();
+            });
+        }
+
+        function updateFileDisplay() {
+            const files = Array.from(fileInput.files || []);
+
+            if (files.length > 0) {
+                fileInfo.style.display = 'flex';
+                fileCount.textContent = `${files.length} file${files.length > 1 ? 's' : ''} selected`;
+                if (fileClearBtn) fileClearBtn.style.display = 'inline-flex';
+            } else {
+                fileInfo.style.display = 'none';
+                if (fileClearBtn) fileClearBtn.style.display = 'none';
+            }
+        }
+
+        function showFileLimitNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'file-limit-notification';
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 50%;
+                left: 50%;
+                transform: translateX(-50%) translateY(20px);
+                background: #fef2f2;
+                color: #b91c1c;
+                padding: 12px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                z-index: 1000;
+                opacity: 0;
+                transition: all 0.3s ease;
+                border: 1px solid #fecaca;
+                font-size: 14px;
+                width: 90%;
+                max-width: 500px;
+            `;
+            notification.innerHTML = `
+                <ion-icon name="warning" style="font-size: 20px;"></ion-icon>
+                <span>Only the first ${MAX_FILES} will be selected.</span>
+            `;
+            document.body.appendChild(notification);
+
+            // Trigger animation
+            requestAnimationFrame(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateX(-50%) translateY(0)';
+            });
+
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(-50%) translateY(-20px)';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+    }
+})();
+
 document.getElementById("user_comment_form").addEventListener("submit", async function (event) {
     event.preventDefault();
     const button = document.querySelector("#user_comment_form button[type='submit']");
@@ -65,29 +159,19 @@ document.getElementById("user_comment_form").addEventListener("submit", async fu
     let stars = parseInt(document.getElementById("user_comment_stars").value);
     let review_date = new Date().toISOString().split("T")[0];
 
-    // Helper to resolve current productId by currency (must match checkout IDs)
-    const getCurrentProductId = () => {
-        try {
-            const curr = window.currencyManager?.getCurrentCurrency?.() || 'SGD';
-            const map = { SGD: '3009', AUD: '3067', IDR: '3113' };
-            return map[curr] || '3009';
-        } catch (_) { return '3009'; }
-    };
-    const productId = getCurrentProductId();
-    // Pick an effective column that exists (fallback to legacy '2594')
-    async function resolveCommentsColumn(preferred) {
-        try {
-            const { error } = await supabase
-                .from("all_customers_comments")
-                .select(preferred)
-                .eq("id", 1)
-                .single();
-            if (error && /does not exist/i.test(error.message)) return '2594';
-            return preferred;
-        } catch (_) {
-            return '2594';
-        }
+    // Safety check - ensure CurrencyManager is available
+    if (!window.currencyManager || typeof window.currencyManager.getCurrentProductName !== 'function') {
+        console.error('CurrencyManager is not available');
+        button.disabled = false;
+        button.style.background = "#f0f0f0";
+        button.style.color = "black";
+        button.innerText = "Submit";
+        return;
     }
+
+    // Get current productId and productName from CurrencyManager
+    const productId = window.currencyManager.getCurrentProductId();
+    const productName = window.currencyManager.getCurrentProductName();
 
     // Generate a simple unique id for this comment to link images (table + bucket)
     const comment_id = `${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
@@ -117,10 +201,11 @@ document.getElementById("user_comment_form").addEventListener("submit", async fu
         let uploadedImagePaths = [];
 
         if (files.length > 0) {
-            // Create a per-comment folder path (e.g., product/<productId>/<comment_id>/filename)
+            // Create a per-comment folder path using product name (e.g., <productName>/<comment_id>/filename)
+            const safeProductName = productName.replace(/[^a-zA-Z0-9._-]/g, '_');
             for (const file of files) {
                 const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-                const objectPath = `${productId}/${comment_id}/${Date.now()}_${safeName}`;
+                const objectPath = `${safeProductName}/${comment_id}/${Date.now()}_${safeName}`;
                 const { error: uploadErr } = await supabase.storage.from(BUCKET_NAME).upload(objectPath, file, {
                     cacheControl: '3600',
                     upsert: false,
@@ -177,26 +262,23 @@ document.getElementById("user_comment_form").addEventListener("submit", async fu
             }
         }
 
-        // Resolve the column we can actually use in DB
-        const effectiveColumn = await resolveCommentsColumn(productId);
-
-        // Fetch existing array in the effective column (assume row with id = 1)
+        // Fetch existing array in the product name column (assume row with id = 1)
         const { data, error: fetchError } = await supabase
             .from("all_customers_comments")
-            .select(effectiveColumn)
+            .select(productName)
             .eq("id", 1)
             .single();
 
         if (fetchError) throw fetchError;
 
-        const existingArray = data?.[effectiveColumn] || [];
+        const existingArray = data?.[productName] || [];
 
         const updatedArray = [newComment, ...existingArray];
 
-        // Update the column with the new array
+        // Update the column with the new array (using product name as column name)
         const { error: updateError } = await supabase
             .from("all_customers_comments")
-            .update({ [effectiveColumn]: updatedArray })
+            .update({ [productName]: updatedArray })
             .eq("id", 1);
 
         if (updateError) throw updateError;
@@ -250,39 +332,24 @@ async function fetchReviews() {
     }
 
     try {
-        const getCurrentProductId = () => {
-            try {
-                const curr = window.currencyManager?.getCurrentCurrency?.() || 'SGD';
-                const map = { SGD: '3009', AUD: '3067', IDR: '3113' };
-                return map[curr] || '3009';
-            } catch (_) { return '3009'; }
-        };
-        const productId = getCurrentProductId();
-        // Resolve an existing column name (fallback to legacy '2594')
-        async function resolveCommentsColumn(preferred) {
-            try {
-                const { error } = await supabase
-                    .from("all_customers_comments")
-                    .select(preferred)
-                    .eq("id", 1)
-                    .single();
-                if (error && /does not exist/i.test(error.message)) return '2594';
-                return preferred;
-            } catch (_) {
-                return '2594';
-            }
+        // Safety check - ensure CurrencyManager is available
+        if (!window.currencyManager || typeof window.currencyManager.getCurrentProductName !== 'function') {
+            console.error('CurrencyManager is not available');
+            return;
         }
-        const effectiveColumn = await resolveCommentsColumn(productId);
+
+        // Get current productName from CurrencyManager (used as column name)
+        const productName = window.currencyManager.getCurrentProductName();
 
         const { data, error } = await supabase
             .from("all_customers_comments")
-            .select(effectiveColumn)
+            .select(productName)
             .eq("id", 1)
             .single();
 
         if (error) throw error;
 
-        const reviews = data?.[effectiveColumn] || [];
+        const reviews = data?.[productName] || [];
 
         // Fetch any images for these reviews from the new images table in one go
         const BUCKET_NAME = 'review-images';
@@ -352,7 +419,7 @@ async function fetchReviews() {
             div.innerHTML = `
                 <div class="card_clint_rate_date_div"><h3>${review_date}</h3></div>
                 <div class="card_clint_rate_info_div">
-                    <img src="p47-wireless-bluetooth-headphones/headphonezoo.webp" alt="p47 wireless bluetooth headphones - headphonezoo" title="p47 wireless bluetooth headphones - headphonezoo">
+                    <img src="lenovo-thinkplus-th30-headphones/headphonezoo.webp" alt="Lenovo Thinkplus TH30 Headphones - Headphonezoo" title="Lenovo Thinkplus TH30 Headphones - Headphonezoo">
                     <h4>${reviewer_name}</h4>
                 </div>
                 <div class="card_clint_rate_comment_div"><h5>${comment}</h5></div>
@@ -407,7 +474,18 @@ function showSuccessNotification() {
     }, 3000);
 }
 
-fetchReviews();
+// Wait for CurrencyManager to be initialized before fetching reviews
+function waitForCurrencyManagerAndFetchReviews() {
+    if (window.currencyManager && typeof window.currencyManager.getCurrentProductName === 'function') {
+        fetchReviews();
+    } else {
+        // Retry after a short delay if CurrencyManager is not ready yet
+        setTimeout(waitForCurrencyManagerAndFetchReviews, 100);
+    }
+}
+
+// Start fetching reviews once CurrencyManager is ready
+waitForCurrencyManagerAndFetchReviews();
 
 // Add optimized scroll event listener to handle animations for dynamically added reviews
 let scrollTimeout;
@@ -419,6 +497,136 @@ window.addEventListener('scroll', () => {
         triggerAnimationForNewElements();
     }, 16); // ~60fps throttling
 }, { passive: true });
+
+// Cleanup orphaned images from storage bucket on page load
+async function cleanupOrphanedImages() {
+    // Safety check - ensure supabase is available
+    if (typeof supabase === 'undefined') {
+        console.warn('Supabase client not available for image cleanup');
+        return;
+    }
+
+    const BUCKET_NAME = 'review-images';
+    const MULTI_STORE_TABLE = 'all_review_comment_images';
+    const STORE_COLUMN = 'headphonezoo';
+
+    try {
+        // 1) Fetch all image paths from the table
+        const { data: tableData, error: tableError } = await supabase
+            .from(MULTI_STORE_TABLE)
+            .select(STORE_COLUMN)
+            .eq('id', 1)
+            .single();
+
+        if (tableError) {
+            console.warn('Error fetching image data from table:', tableError.message);
+            return;
+        }
+
+        const storeArray = Array.isArray(tableData?.[STORE_COLUMN]) ? tableData[STORE_COLUMN] : [];
+
+        // Collect all image paths from the table (flatten all images arrays)
+        const referencedImagePaths = new Set();
+        for (const record of storeArray) {
+            if (record && record.images && Array.isArray(record.images)) {
+                for (const imagePath of record.images) {
+                    if (imagePath && typeof imagePath === 'string') {
+                        referencedImagePaths.add(imagePath);
+                    }
+                }
+            }
+        }
+
+        console.log(`Found ${referencedImagePaths.size} referenced images in table`);
+
+        // 2) List all files in the bucket (recursively)
+        const { data: bucketFiles, error: listError } = await supabase.storage
+            .from(BUCKET_NAME)
+            .list('', {
+                limit: 10000,
+                offset: 0,
+                sortBy: { column: 'name', order: 'asc' }
+            });
+
+        if (listError) {
+            console.warn('Error listing files in bucket:', listError.message);
+            return;
+        }
+
+        // Recursively collect all file paths from bucket
+        const bucketFilePaths = new Set();
+
+        async function collectFiles(folderPath = '') {
+            const { data: items, error } = await supabase.storage
+                .from(BUCKET_NAME)
+                .list(folderPath, {
+                    limit: 10000,
+                    offset: 0,
+                    sortBy: { column: 'name', order: 'asc' }
+                });
+
+            if (error) {
+                console.warn(`Error listing folder ${folderPath}:`, error.message);
+                return;
+            }
+
+            if (!items || items.length === 0) return;
+
+            for (const item of items) {
+                const fullPath = folderPath ? `${folderPath}/${item.name}` : item.name;
+
+                // In Supabase Storage, folders have id === null, files have an id
+                if (item.id === null || item.id === undefined) {
+                    // It's a folder, recurse into it
+                    await collectFiles(fullPath);
+                } else {
+                    // It's a file, add to set
+                    bucketFilePaths.add(fullPath);
+                }
+            }
+        }
+
+        await collectFiles();
+
+        console.log(`Found ${bucketFilePaths.size} files in storage bucket`);
+
+        // 3) Find orphaned files (files in bucket but not in table)
+        const orphanedFiles = [];
+        for (const filePath of bucketFilePaths) {
+            if (!referencedImagePaths.has(filePath)) {
+                orphanedFiles.push(filePath);
+            }
+        }
+
+        console.log(`Found ${orphanedFiles.length} orphaned files to delete`);
+
+        // 4) Delete orphaned files (batch delete for efficiency)
+        if (orphanedFiles.length > 0) {
+            const { data: deleteData, error: deleteError } = await supabase.storage
+                .from(BUCKET_NAME)
+                .remove(orphanedFiles);
+
+            if (deleteError) {
+                console.error('Error deleting orphaned files:', deleteError.message);
+            } else {
+                console.log(`Successfully deleted ${orphanedFiles.length} orphaned image(s)`);
+            }
+        } else {
+            console.log('No orphaned images found - storage is clean');
+        }
+
+    } catch (error) {
+        console.error('Error during image cleanup:', error);
+    }
+}
+
+// Run cleanup on page load (after a short delay to ensure CurrencyManager is initialized)
+document.addEventListener('DOMContentLoaded', () => {
+    // Wait a bit for CurrencyManager to initialize, then run cleanup
+    setTimeout(() => {
+        cleanupOrphanedImages();
+    }, 2000); // 2 second delay to ensure all initialization is complete
+});
 
 
 // Review images full-screen gallery using existing modal

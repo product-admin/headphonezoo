@@ -182,11 +182,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 const colorVariants = {
     black: {
         images: [
-            'p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-1.webp',
-            'p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-2.webp',
-            'p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-3.webp',
-            'p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-4.webp',
-            'p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones-5.webp'
+            'lenovo-thinkplus-th30-headphones/lenovo-thinkplus-th30-headphones/lenovo-thinkplus-th30-headphones-1.webp',
+            'lenovo-thinkplus-th30-headphones/lenovo-thinkplus-th30-headphones/lenovo-thinkplus-th30-headphones-2.webp',
+            'lenovo-thinkplus-th30-headphones/lenovo-thinkplus-th30-headphones/lenovo-thinkplus-th30-headphones-3.webp',
+            'lenovo-thinkplus-th30-headphones/lenovo-thinkplus-th30-headphones/lenovo-thinkplus-th30-headphones-4.webp',
+            'lenovo-thinkplus-th30-headphones/lenovo-thinkplus-th30-headphones/lenovo-thinkplus-th30-headphones-5.webp'
         ],
         available: true
     },
@@ -988,14 +988,9 @@ function handleBuyClickStandalone() {
         AUD: 'https://au-checkout.headphonezoo.com',
         IDR: 'https://id-checkout.headphonezoo.com'
     };
-    const productIds = {
-        SGD: '3009',
-        AUD: '3067',
-        IDR: '3113'
-    };
 
     const origin = checkoutOrigins[currentCurrency] || checkoutOrigins.SGD;
-    const productId = productIds[currentCurrency] || productIds.SGD;
+    const productId = window.currencyManager.getCurrentProductId();
 
     dlog('Standalone handler: currency=', currentCurrency, 'productId=', productId, 'origin=', origin, 'color=', color);
 
