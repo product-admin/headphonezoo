@@ -4,20 +4,20 @@ const productsData = {
         {
             id: 1,
             name: "P47 Wireless Headphones",
-            image: "headphone-image/p47-wireless-bluetooth-headphones.webp",
-            alt: "Wireless Headphones",
+            image: "headphone-page/p47-wireless-bluetooth-headphones/p47-wireless-bluetooth-headphones.webp",
+            alt: "P47 Wireless Headphones",
             rating: 4.5,
             comingSoon: false,
             url: "https://headphonezoo.com/headphone-page/p47-wireless-bluetooth-headphones"
         },
         {
             id: 2,
-            name: "Headphone is Cooking Up",
-            image: "headphonezoo.webp",
-            alt: "Smart Watch",
-            rating: 0,
-            comingSoon: true,
-            url: ""
+            name: "Lenovo Thinkplus TH30 Headphones",
+            image: "headphone-page/lenovo-thinkplus-th30-headphones/lenovo-thinkplus-th30-headphones.webp",
+            alt: "Lenovo Thinkplus TH30 Headphones",
+            rating: 4.9,
+            comingSoon: false,
+            url: "https://headphonezoo.com/headphone-page/lenovo-thinkplus-th30-headphones"
         },
     ],
     "newest": [
