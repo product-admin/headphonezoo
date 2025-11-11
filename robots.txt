@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://headphonezoo.com/sitemap.xml
