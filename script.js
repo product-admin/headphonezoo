@@ -159,4 +159,94 @@ document.addEventListener('DOMContentLoaded', function () {
         section.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
         observer.observe(section);
     });
+
+    // Product search/filter
+    const searchInput = document.getElementById('product-search-input-id');
+    const clearBtn = document.getElementById('clear-search-btn');
+
+    function showCard(card) {
+        // If it was previously display:none, make it flow first
+        if (window.getComputedStyle(card).display === 'none') {
+            card.style.display = '';
+        }
+        // Start hidden state to enable fade-in
+        card.classList.add('is-hidden');
+        // Next frame, remove hidden to animate to visible
+        requestAnimationFrame(() => {
+            card.classList.remove('is-hidden');
+        });
+    }
+
+    function hideCard(card) {
+        // Add hidden class to fade out
+        card.classList.add('is-hidden');
+        // After transition completes, set display:none to remove from layout
+        const onEnd = () => {
+            // Ensure it is still intended to be hidden
+            if (card.classList.contains('is-hidden')) {
+                card.style.display = 'none';
+            }
+            card.removeEventListener('transitionend', onEnd);
+        };
+        card.addEventListener('transitionend', onEnd, { once: true });
+    }
+
+    function updateSectionTitlesVisibility() {
+        const grids = document.querySelectorAll('.products-grid');
+        grids.forEach(grid => {
+            const cards = Array.from(grid.querySelectorAll('.product-card'));
+            const visibleCount = cards.reduce((count, card) => {
+                const display = window.getComputedStyle(card).display;
+                return count + (display !== 'none' ? 1 : 0);
+            }, 0);
+            const titleEl = grid.previousElementSibling;
+            if (titleEl && titleEl.classList && titleEl.classList.contains('section-title')) {
+                titleEl.style.display = visibleCount > 0 ? '' : 'none';
+            }
+        });
+    }
+
+    function filterProductsByName(query) {
+        const normalizedQuery = query.trim().toLowerCase();
+        const cards = document.querySelectorAll('.product-card');
+        if (!normalizedQuery) {
+            cards.forEach(card => {
+                showCard(card);
+            });
+            updateSectionTitlesVisibility();
+            return;
+        }
+        cards.forEach(card => {
+            const nameEl = card.querySelector('.product-name');
+            const productName = nameEl ? nameEl.innerText.trim().toLowerCase() : '';
+            const isMatch = productName.includes(normalizedQuery);
+            if (isMatch) {
+                showCard(card);
+            } else {
+                hideCard(card);
+            }
+        });
+        updateSectionTitlesVisibility();
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            filterProductsByName(searchInput.value);
+        });
+    }
+
+    if (clearBtn && searchInput) {
+        clearBtn.addEventListener('click', () => {
+            if (searchInput.value) {
+                searchInput.value = '';
+                filterProductsByName('');
+                searchInput.focus();
+            } else {
+                searchInput.focus();
+            }
+        });
+    }
+
+    // Initial check to ensure titles reflect currently visible cards (e.g., after render)
+    updateSectionTitlesVisibility();
 });
